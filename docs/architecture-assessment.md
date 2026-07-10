@@ -50,12 +50,12 @@ exports, and external Vue/Vuetify peers.
 
 | Original area | New API | Initial status | Decision |
 | --- | --- | --- | --- |
-| `DsCalendarApp`, `DsCalendar` | `MdCalendarApp`, `MdCalendar` | Implemented | Controlled view/date/events with typed events |
-| `DsWeeksView`, `DsDaysView`, `DsDayTimes` | `MdMonthView`, `MdWeekView`, `MdDayView` | Implemented | Purpose-specific views; CSS-grid layout |
-| `DsAgenda*` | `MdAgenda` | Implemented | Flattened public surface; `agenda-event` slot |
+| `DsCalendarApp`, `DsCalendar` | Same names | Implemented | Controlled view/date/events with typed events |
+| `DsWeeksView`, `DsDaysView`, `DsDayTimes` | Same names | Implemented | Purpose-specific views; CSS-grid layout |
+| `DsAgenda` | Same name | Implemented | Flattened public surface; `agenda-event` slot |
 | `DsCalendarEvent*` | Internal event button + public slots | Implemented | No internal-structure components exported |
-| `DsEventDialog`, `DsEvent` | `MdEventDialog` | Implemented | Controlled dialog and validated typed drafts |
-| `DsSchedule*`, frequency controls | `MdScheduleEditor` | Implemented | One typed editor for daily/weekly/monthly/yearly rules |
+| `DsEventDialog`, `DsEvent` | Same names | Implemented | Controlled dialog and validated typed drafts |
+| `DsSchedule` | Same name | Implemented | One typed editor for daily/weekly/monthly/yearly rules |
 | inclusion/exclusion/cancel/move actions | scheduling core occurrence overrides | Implemented in core | UI remains intentionally compact |
 | gesture component | Native pointer/keyboard interaction | Partial | Selection and keyboard work; drag/resize roadmap |
 | global defaults/locales | plugin context + `useMazeyDaySpan` | Implemented | App-scoped and runtime extensible |

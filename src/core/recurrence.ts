@@ -17,8 +17,12 @@ function calendarDayIndex(date: Date) {
 function matchesWeeklyInterval(date: Date, recurrenceStart: Date, rule: RecurrenceRule) {
   if (rule.frequency !== 'weekly') return true
   const interval = Math.max(1, rule.interval ?? 1)
-  const anchorWeek = startOfWeek(recurrenceStart, 0)
-  const candidateWeek = startOfWeek(date, 0)
+  const configuredWeekStart = rule.weekStart ?? 1
+  const weekStart = Number.isInteger(configuredWeekStart) && configuredWeekStart >= 0 && configuredWeekStart <= 6
+    ? configuredWeekStart
+    : 1
+  const anchorWeek = startOfWeek(recurrenceStart, weekStart)
+  const candidateWeek = startOfWeek(date, weekStart)
   const elapsedWeeks = Math.floor((calendarDayIndex(candidateWeek) - calendarDayIndex(anchorWeek)) / 7)
   return elapsedWeeks >= 0 && elapsedWeeks % interval === 0
 }

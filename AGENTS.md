@@ -20,7 +20,7 @@ Use pnpm. The supported runtime is Node.js 22.12 or newer, as declared in `packa
 
 - `src/core/`: framework-independent scheduling, recurrence, date, range, and overlap logic.
 - `src/types/`: public domain and emitted-event types.
-- `src/components/`: Vue presentation components. Public components use the `Md` prefix.
+- `src/components/`: Vue presentation components. Public component APIs retain the original `Ds` names. Implementation filenames are internal and do not define the package API.
 - `src/composables/`: reusable Vue state and behavior.
 - `src/plugin/`: plugin installation, injection context, defaults, and locale registration.
 - `src/locales/`: typed locale definitions and built-in translations.
@@ -50,13 +50,15 @@ Treat exports from `src/index.ts`, `src/components/index.ts`, `src/types/`, `src
 
 When adding a public component:
 
-1. Use an explicit `Md` name.
+1. Preserve the original `Ds` name when replacing a legacy component; choose an explicit `Ds` name for new public components.
 2. Export it from `src/components/index.ts`.
 3. Add its explicit name and component to `src/components/registry.ts` for plugin registration.
 4. Add focused component tests.
 5. Document public props, emits, and slots in `docs/public-api.md` and README examples where relevant.
 
 Do not rely on SFC runtime `component.name` inference for global registration.
+
+Do not remove or rename a supported `Ds` export. Do not expose implementation-only `Md` names from the package entry point or global plugin.
 
 When changing public types, plugin options, events, slots, locale keys, package exports, or CSS entry points, update the README and migration documentation. Preserve the current package version unless the task explicitly includes release or versioning work; do not independently alter it as part of an unrelated change.
 
@@ -72,6 +74,7 @@ For weekly recurrence changes, test:
 
 - Multiple selected weekdays.
 - `interval` values greater than one.
+- Monday- and Sunday-based `weekStart` boundaries.
 - `count` and `until` boundaries.
 - Inclusion, exclusion, cancellation, and movement interactions where affected.
 
