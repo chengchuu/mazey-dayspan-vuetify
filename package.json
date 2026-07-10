@@ -1,0 +1,85 @@
+{
+  "name": "mazey-dayspan-vuetify",
+  "version": "2.1.5",
+  "description": "A TypeScript template for publishing npm packages in CJS, ESM, and browser formats.",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "types": "lib/index.d.ts",
+  "unpkg": "lib/mazey-dayspan-vuetify.min.js",
+  "jsdelivr": "lib/mazey-dayspan-vuetify.min.js",
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "webpack serve --config ./scripts/webpack.config.dev.js",
+    "dev:open": "webpack serve --config ./scripts/webpack.config.dev.js --open",
+    "build": "cross-env SCRIPTS_NPM_PACKAGE_DEBUG=close SCRIPTS_NPM_PACKAGE_VERSION=$npm_package_version rollup --config ./scripts/rollup.config.mjs",
+    "build:debug": "cross-env SCRIPTS_NPM_PACKAGE_DEBUG=open SCRIPTS_NPM_PACKAGE_VERSION=$npm_package_version rollup --config ./scripts/rollup.config.mjs",
+    "build:dev": "webpack --config ./scripts/webpack.config.dev.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "docs": "typedoc --readme ./README.md --excludeProtected --excludePrivate --excludeInternal --hideGenerator",
+    "lint": "eslint ./examples ./scripts ./src ./test ./types",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "preview": "npm run typecheck && npm run lint && npm run build && npm run test",
+    "release": "npm run preview && npm publish",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chengchuu/mazey-dayspan-vuetify.git"
+  },
+  "keywords": [
+    "npm-package",
+    "template",
+    "typescript",
+    "rollup",
+    "webpack",
+    "jest",
+    "typedoc"
+  ],
+  "author": {
+    "name": "Cheng",
+    "email": "mazeyqian@gmail.com",
+    "url": "https://github.com/chengchuu"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chengchuu/mazey-dayspan-vuetify/issues"
+  },
+  "homepage": "https://chengchuu.github.io/mazey-dayspan-vuetify/",
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-typescript": "^7.29.7",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "@eslint/js": "^10.0.1",
+    "@rollup/plugin-babel": "^7.1.0",
+    "@rollup/plugin-terser": "^1.0.0",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "cross-env": "^10.1.0",
+    "eslint": "^10.6.0",
+    "globals": "^17.7.0",
+    "html-webpack-plugin": "^5.6.7",
+    "husky": "^9.1.7",
+    "jest": "^30.4.2",
+    "lint-staged": "^17.0.8",
+    "prettier": "^3.9.5",
+    "rollup": "^4.62.2",
+    "rollup-plugin-dts": "^6.4.1",
+    "ts-loader": "^9.6.2",
+    "tslib": "^2.8.1",
+    "typedoc": "^0.28.20",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.63.0",
+    "webpack": "^5.108.4",
+    "webpack-cli": "^7.2.1",
+    "webpack-dev-server": "^6.0.0"
+  }
+}

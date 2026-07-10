@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ES2015"],
+    "sourceMap": true,
+    "rootDir": ".",
+    "strict": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "bundler",
+    "types": [],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./src/**/*.ts", "./examples/**/*.ts", "./types/**/*.ts"],
+  "exclude": ["./coverage", "./dist-dev", "./docs", "./lib", "./node_modules"],
+  "typedocOptions": {
+    "entryPoints": ["./src/index.ts"],
+    "out": "./docs"
+  }
+}
