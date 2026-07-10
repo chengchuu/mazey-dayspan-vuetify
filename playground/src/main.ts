@@ -1,0 +1,2 @@
+import { createApp } from 'vue'; import { createVuetify } from 'vuetify'; import * as components from 'vuetify/components'; import * as directives from 'vuetify/directives'; import 'vuetify/styles'; import App from './App.vue'; import MazeyDaySpanVuetify,{zhCN} from 'mazey-dayspan-vuetify'
+const app=createApp(App);app.use(createVuetify({components,directives,theme:{defaultTheme:'light'}}));app.use(MazeyDaySpanVuetify,{locale:'en',locales:{'zh-CN':zhCN},defaults:{eventColor:'#7c4dff'}});app.mount('#app')

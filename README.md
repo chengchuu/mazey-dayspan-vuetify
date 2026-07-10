@@ -1,92 +1,101 @@
-⚠️ Note: The project is a template for npm. Please don't use it directly.
-
 # mazey-dayspan-vuetify
 
-[![npm version][npm-image]][npm-url]
-[![l][l-image]][l-url]
-
-[npm-image]: https://img.shields.io/npm/v/mazey-dayspan-vuetify
-[npm-url]: https://npmjs.org/package/mazey-dayspan-vuetify
-[l-image]: https://img.shields.io/npm/l/mazey-dayspan-vuetify
-[l-url]: https://github.com/chengchuu/mazey-dayspan-vuetify
-
-A TypeScript template for publishing npm packages in CJS, ESM, and browser formats.
+A modern Vue 3 and Vuetify calendar and scheduling component library inspired by DaySpan Vuetify.
+This is an independent successor and is not maintained or endorsed by the original author.
 
 ## Install
 
-Use mazey-dayspan-vuetify via [npm](https://www.npmjs.com/package/mazey-dayspan-vuetify).
+Requires Vue 3.5, and Vuetify 3.12.
 
-```bash
-npm install mazey-dayspan-vuetify --save
+```sh
+pnpm add mazey-dayspan-vuetify vue vuetify
 ```
 
-Of course, you can also download this file and serve it yourself. The file locates at the `lib/mazey-dayspan-vuetify.min.js`.
+```ts
+import { createApp } from 'vue'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import 'vuetify/styles'
+import MazeyDaySpanVuetify from 'mazey-dayspan-vuetify'
+import 'mazey-dayspan-vuetify/style.css'
+import App from './App.vue'
 
-## Usage
-
-Import the package in your application code.
-
-```typescript
-import { createGreeting, packageInfo } from "mazey-dayspan-vuetify";
-
-createGreeting("Cheng"); // "Hello, Cheng!"
-
-createGreeting("community", {
-  punctuation: ".",
-}); // "Hello, community."
-
-packageInfo.name; // "mazey-dayspan-vuetify"
+const app = createApp(App)
+app.use(createVuetify({ components, directives }))
+app.use(MazeyDaySpanVuetify, { locale: 'en', defaults: { eventColor: '#1976d2' } })
+app.mount('#app')
 ```
 
-## Contributing
+The plugin registers the `Md` components. Tree-shakable usage is also supported:
 
-### Development Environment
-
-| Dependency | Version  |
-| ---------- | -------- |
-| Node.js    | v22.21.1 |
-| TypeScript | v5.9.3   |
-
-### Scripts
-
-Install Dependencies:
-
-```bash
-npm i
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MdCalendar, type CalendarEvent } from 'mazey-dayspan-vuetify'
+const events = ref<CalendarEvent[]>([{ id:'1', title:'Planning', start:new Date(), end:new Date(Date.now()+3600000) }])
+</script>
+<template><MdCalendar :events="events" view="month" /></template>
 ```
 
-Development:
+## Event and recurrence model
 
-```bash
-npm run dev
+Events are plain typed data. Dates are `Date` objects and `end` is exclusive. Recurrence is bounded and
+extensible rather than a leaked DaySpan class API.
+
+```ts
+const weekly: CalendarEvent = {
+  id: 'review', title: 'Review', start: new Date('2026-07-06T14:00:00'), end: new Date('2026-07-06T15:00:00'),
+  schedule: { recurrence: { frequency: 'weekly', interval: 1, byWeekday: [1], count: 12 },
+    exclusions: [new Date('2026-07-20T14:00:00')] }
+}
 ```
 
-Build:
+## Localization and global defaults
 
-```bash
-npm run build
+English ships by default and `zh-CN` is included. Runtime registration and switching require no rebuild.
+
+```ts
+import { zhCN, useMazeyDaySpan } from 'mazey-dayspan-vuetify'
+app.use(MazeyDaySpanVuetify, { locale:'zh-CN', locales:{ 'zh-CN':zhCN } })
+const dayspan = useMazeyDaySpan()
+dayspan.registerLocale('en-GB', { firstDayOfWeek:1, messages:{ today:'Today' } })
+dayspan.setLocale('en-GB')
 ```
 
-Test:
+Defaults include `eventColor`, initial `view`, `agendaDays`, and `hourHeight`. CSS variables support light
+and dark hosts; the library supplies no reset and assumes no icon font. Configure icons through Vuetify.
 
-```bash
-npm run test
+## Slots, events, and security
+
+`toolbar`, `event`, `date-title`, `empty`, `agenda-event`, schedule extension, and dialog action slots are
+documented in [docs/public-api.md](docs/public-api.md). Public emits use typed tuple payloads.
+
+Titles, descriptions, locations, and locale messages render as text. The library never silently injects
+event HTML. Use trusted Vue slot templates for rich content. A sanitizer can be provided in plugin options
+for an application-defined explicit HTML extension, but no built-in component invokes it automatically.
+
+## Accessibility and browser support
+
+Calendar events, dates, navigation, and view controls are semantic buttons with labels and visible focus. Date controls support Shift+Enter and Shift+Space to request event creation without a pointer.
+Dialogs use Vuetify's focus/escape behavior; reduced motion is honored. Roving grid focus, automated screen
+reader coverage, and full keyboard drag/resize remain roadmap work. Targets are current evergreen browsers;
+the 1.0 support matrix will be finalized after cross-browser CI.
+
+## Playground and development
+
+```sh
+pnpm install
+pnpm dev
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm test:e2e
+pnpm docs:build
 ```
 
-Documentation:
-
-```bash
-npm run docs
-```
-
-Docker:
-
-```bash
-docker compose up -d --build
-```
-
-Visit: <http://localhost:8080>
-
-## License
-
-This software is released under the terms of the [MIT license](https://github.com/chengchuu/mazey-dayspan-vuetify/blob/main/LICENSE).
+The playground demonstrates all views, creation/editing, recurrence, runtime locale switching, dark mode,
+and custom event rendering. Contributions should include typed public contracts, focused tests, updated docs,
+and successful validation. See the [architecture assessment](docs/architecture-assessment.md),
+[migration guide](docs/migration-from-dayspan-vuetify.md), and [roadmap](docs/roadmap.md).

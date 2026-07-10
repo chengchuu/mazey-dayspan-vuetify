@@ -1,32 +1,3 @@
-/**
- * @author Cheng
- */
-
-import type { CreateGreetingOptions, PackageInfo } from "./typing";
-
-export type { CreateGreetingOptions, PackageInfo } from "./typing";
-
-/**
- * Basic package metadata.
- */
-export const packageInfo: PackageInfo = {
-  name: "mazey-dayspan-vuetify",
-  version: "2.1.5",
-};
-
-/**
- * Create a friendly greeting message.
- *
- * @param name - The name to include in the greeting.
- * @param options - Optional formatting options.
- * @returns The generated greeting message.
- */
-export function createGreeting(
-  name: string,
-  options: CreateGreetingOptions = {},
-): string {
-  const normalizedName = name.trim();
-  const punctuation = options.punctuation ?? "!";
-
-  return `Hello, ${normalizedName || "friend"}${punctuation}`;
-}
+import './styles/main.scss'
+export { default } from './plugin'
+export * from './plugin'; export * from './components'; export * from './composables'; export * from './core/date'; export * from './core/recurrence'; export * from './core/overlap'; export * from './locales'; export * from './types'
