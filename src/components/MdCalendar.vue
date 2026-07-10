@@ -1,6 +1,57 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'; import MdMonthView from './MdMonthView.vue'; import MdWeekView from './MdWeekView.vue'; import MdDayView from './MdDayView.vue'; import MdAgenda from './MdAgenda.vue'; import { navigateDate,rangeForView } from '../core/date'; import { useMazeyDaySpan } from '../plugin/context'; import type { CalendarDay,CalendarEvent,CalendarOccurrence,CalendarRange,CalendarView } from '../types'
-const props=withDefaults(defineProps<{events:CalendarEvent[];modelValue?:Date;view?:CalendarView}>(),{modelValue:()=>new Date(),view:'month'});const emit=defineEmits<{'update:modelValue':[date:Date];'update:view':[view:CalendarView];eventClick:[event:CalendarOccurrence];eventCreateRequest:[day:CalendarDay];dayClick:[day:CalendarDay];viewChange:[view:CalendarView];rangeChange:[range:CalendarRange]}>();defineSlots<{toolbar?(props:{date:Date;view:CalendarView;navigate:(direction:-1|1)=>void;setView:(view:CalendarView)=>void}):unknown;event?(props:{event:CalendarOccurrence;day:CalendarDay}):unknown;'agenda-event'?(props:{event:CalendarOccurrence}):unknown;empty?():unknown}>();const ds=useMazeyDaySpan();const date=ref(new Date(props.modelValue));watch(()=>props.modelValue,value=>date.value=new Date(value));const title=computed(()=>ds.formatDate(date.value,{month:'long',year:'numeric'}));const component=computed(()=>({month:MdMonthView,week:MdWeekView,day:MdDayView,agenda:MdAgenda})[props.view]);function navigate(direction:-1|1){date.value=navigateDate(date.value,props.view,direction);emit('update:modelValue',date.value);emit('rangeChange',rangeForView(date.value,props.view,ds.currentLocale.value.firstDayOfWeek))}function setView(view:CalendarView){emit('update:view',view);emit('viewChange',view);emit('rangeChange',rangeForView(date.value,view,ds.currentLocale.value.firstDayOfWeek))}function today(){date.value=new Date();emit('update:modelValue',date.value)}
+import { computed, ref, watch } from 'vue'
+import MdAgenda from './MdAgenda.vue'
+import MdDayView from './MdDayView.vue'
+import MdMonthView from './MdMonthView.vue'
+import MdWeekView from './MdWeekView.vue'
+import { navigateDate, rangeForView } from '../core/date'
+import { useMazeyDaySpan } from '../plugin/context'
+import type { CalendarDay, CalendarEvent, CalendarOccurrence, CalendarRange, CalendarView } from '../types'
+
+const props = withDefaults(defineProps<{ events:CalendarEvent[]; modelValue?:Date; view?:CalendarView }>(), {
+  modelValue: () => new Date(),
+  view: 'month',
+})
+const emit = defineEmits<{
+  'update:modelValue':[date:Date]
+  'update:view':[view:CalendarView]
+  eventClick:[event:CalendarOccurrence]
+  eventCreateRequest:[day:CalendarDay]
+  dayClick:[day:CalendarDay]
+  viewChange:[view:CalendarView]
+  rangeChange:[range:CalendarRange]
+}>()
+defineSlots<{
+  toolbar?(props:{ date:Date; view:CalendarView; navigate:(direction:-1|1)=>void; setView:(view:CalendarView)=>void }):unknown
+  event?(props:{ event:CalendarOccurrence; day:CalendarDay }):unknown
+  'agenda-event'?(props:{ event:CalendarOccurrence }):unknown
+  empty?():unknown
+}>()
+
+const ds = useMazeyDaySpan()
+const date = ref(new Date(props.modelValue))
+watch(() => props.modelValue, (value) => { date.value = new Date(value) })
+const title = computed(() => ds.formatDate(date.value, { month:'long', year:'numeric' }))
+const component = computed(() => ({ month:MdMonthView, week:MdWeekView, day:MdDayView, agenda:MdAgenda })[props.view])
+
+function emitRange(view = props.view) {
+  emit('rangeChange', rangeForView(date.value, view, ds.currentLocale.value.firstDayOfWeek))
+}
+function navigate(direction:-1|1) {
+  date.value = navigateDate(date.value, props.view, direction)
+  emit('update:modelValue', date.value)
+  emitRange()
+}
+function setView(view:CalendarView) {
+  emit('update:view', view)
+  emit('viewChange', view)
+  emitRange(view)
+}
+function today() {
+  date.value = new Date()
+  emit('update:modelValue', date.value)
+  emitRange()
+}
 </script>
 <template>
   <section class="md-calendar">

@@ -12,7 +12,7 @@ function layouts(day:CalendarDay){return layoutOverlaps(eventsForDay(occurrences
 function style(event:CalendarOccurrence,column:number,columns:number){const base=startOfDay(event.start);const start=Math.max(0,(event.start.getTime()-base.getTime())/60_000);const duration=Math.max(30,(event.end.getTime()-event.start.getTime())/60_000);return{top:`${start/60*ds.defaults.hourHeight}px`,height:`${duration/60*ds.defaults.hourHeight}px`,left:`${column/columns*100}%`,width:`${100/columns}%`,'--md-event-color':event.color||ds.defaults.eventColor}}
 </script>
 <template>
-  <div class="md-time-grid md-time-grid--week" role="grid" :aria-label="ds.t('week')">
+  <div class="md-time-grid md-time-grid--week" role="grid" :aria-label="ds.t(singleDay ? 'day' : 'week')">
     <section v-for="day in days" :key="day.key" class="md-time-grid__day" :class="{'is-today':day.isToday}" role="gridcell">
       <button type="button" class="md-time-grid__heading" @click="emit('dayClick',day)" @dblclick="emit('eventCreateRequest',day)">
         {{ ds.formatDate(day.date,{weekday:'short',day:'numeric'}) }}
