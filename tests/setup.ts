@@ -1,0 +1,2 @@
+import { config } from '@vue/test-utils'
+config.global.stubs = { VDialog:{template:'<div><slot /></div>'},VCard:{template:'<div><slot /></div>'},VCardTitle:{template:'<div><slot /></div>'},VCardText:{template:'<div><slot /></div>'},VCardActions:{template:'<div><slot /></div>'},VTextField:{template:'<input />'},VTextarea:{template:'<textarea />'},VCheckbox:{template:'<input type="checkbox" />'},VBtn:{template:'<button><slot /></button>'},VSpacer:{template:'<span />'} }
