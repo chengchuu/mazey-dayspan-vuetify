@@ -1,27 +1,61 @@
 # Migration from `dayspan-vuetify`
 
-This package is an independent successor, not a drop-in upgrade. Install Vue 3, Vuetify 3, and
-`mazey-dayspan-vuetify`; import `mazey-dayspan-vuetify/style.css` after Vuetify styles.
+`mazey-dayspan-vuetify` preserves the original high-level `Ds*` component names wherever a working
+Vue 3 equivalent exists. This lets applications migrate imports and plugin setup incrementally rather
+than renaming every template component at once.
+
+This is still not a drop-in runtime upgrade: component contracts use Vue 3, plain typed event data,
+and controlled state. Install Vue 3, Vuetify 3, and `mazey-dayspan-vuetify`; import
+`mazey-dayspan-vuetify/style.css` after Vuetify styles.
+
+## Preserved component names
+
+| Original API | Vue 3 API | Status | Notes |
+| --- | --- | --- | --- |
+| `DsCalendarApp` | `DsCalendarApp` | Available | Controlled plain event arrays |
+| `DsCalendar` | `DsCalendar` | Available | `view` is `month/week/day/agenda` |
+| `DsWeeksView` | `DsWeeksView` | Available | Six-week month grid |
+| `DsDaysView` | `DsDaysView` | Available | Timed week grid with overlap layout |
+| `DsDayTimes` | `DsDayTimes` | Available | Single-day timed grid |
+| `DsAgenda` | `DsAgenda` | Available | Focused agenda component |
+| `DsEvent` | `DsEvent` | Available with changed contract | Uses the consolidated typed dialog/editor |
+| `DsEventDialog` | `DsEventDialog` | Available | Controlled through `v-model` |
+| `DsSchedule` | `DsSchedule` | Initial | Bounded daily/weekly/monthly/yearly rules |
+
+Tree-shakable imports keep the original names:
+
+```ts
+import {
+  DsCalendar,
+} from 'mazey-dayspan-vuetify'
+```
+
+Installing the plugin globally registers the preserved `Ds*` names.
+
+## Other API changes
 
 | Old API | New API | Status | Notes |
 | --- | --- | --- | --- |
 | `dayspan-vuetify` | `mazey-dayspan-vuetify` | Replaced | New package and repository identity |
-| `Vue.use(DaySpanVuetify)` | `app.use(MazeyDaySpanVuetify)` | Replaced | Vue 3 plugin API |
+| `Vue.use(DaySpanVuetify)` | `app.use(MazeyDaySpanVuetify)` | Replaced | Vue 3 plugin API; the default import may still be locally named `DaySpanVuetify` |
 | `this.$dayspan`, `Vue.$dayspan` | `useMazeyDaySpan()` | Replaced | Typed app-scoped injection; no prototype mutation |
-| `DsCalendarApp` | `MdCalendarApp` | Available | Controlled plain event arrays |
-| `DsCalendar` | `MdCalendar` | Available | `view` is `month/week/day/agenda` |
-| `DsWeeksView` | `MdMonthView` | Available | Six-week grid |
-| `DsDaysView`, `DsDayTimes` | `MdWeekView`, `MdDayView` | Available | Typed events and overlap layout |
-| `DsAgenda*` | `MdAgenda` | Available | One focused component |
-| `DsEventDialog`, `DsEvent` | `MdEventDialog` | Available | `v-model` open state and plain event draft |
-| `DsSchedule*` | `MdScheduleEditor` | Initial | Bounded typed rules; advanced UI planned |
-| DaySpan class instances | `CalendarEvent`, `EventSchedule` | Replaced | Plain TypeScript data; internal core |
+| DaySpan class instances | `CalendarEvent`, `EventSchedule` | Replaced | Plain TypeScript data and internal core |
 | `.sync`, `input` events | `v-model:*`, `update:*` | Replaced | Vue 3 conventions |
-| mutable `handled` envelopes | explicit typed payloads | Replaced | Host owns state updates |
-| global locale mutation | context `registerLocale` / `setLocale` | Replaced | Partial overrides and fallback |
-| `dayspan-vuetify.min.css` | `mazey-dayspan-vuetify/style.css` | Replaced | Scoped tokens; no reset/icon font |
-| internal activator/toolbar slots | semantic documented slots | Changed | See `docs/public-api.md` |
-| drag, resize, touch gestures | pointer interaction | Planned | Not claimed as parity |
+| mutable `handled` envelopes | Explicit typed payloads | Replaced | Host owns state updates |
+| global locale mutation | Context `registerLocale` / `setLocale` | Replaced | Partial overrides and fallback |
+| `dayspan-vuetify.min.css` | `mazey-dayspan-vuetify/style.css` | Replaced | Scoped tokens; no reset or icon font |
+| internal activator/toolbar slots | Semantic documented slots | Changed | See `docs/public-api.md` |
+| drag, resize, touch gestures | Pointer interaction | Planned | Not claimed as parity |
+
+## Unsupported legacy component names
+
+Legacy leaf components that only exposed the original implementation's internal structure are not
+registered under misleading replacements. This currently includes `DsGestures`, `DsDay`, `DsDayRow`,
+`DsDayPicker`, `DsAgendaDay`, `DsAgendaEvent`, the `DsCalendarEvent*` family, schedule subcontrols,
+frequency subcontrols, `DsWeekHeader`, `DsWeekDayHeader`, and `DsIdentifierChip`.
+
+Use the preserved high-level components and their documented slots instead. Additional legacy names
+should only be restored when equivalent behavior and tests exist.
 
 Vuetify 1 elements (`v-layout`, `v-flex`, `v-list-tile`), old slot attributes, icon-font names, and
 `$vuetify.breakpoint` are not accepted. Register your preferred Vuetify 3 icon set in the host.
@@ -29,4 +63,5 @@ Vuetify 1 elements (`v-layout`, `v-flex`, `v-list-tile`), old slot attributes, i
 Locales now contain plain serializable strings and an explicit `firstDayOfWeek`. HTML-bearing locale
 messages are unsupported. The initial core covers daily/weekly/monthly/yearly recurrence, inclusions,
 exclusions, cancellation, and moved instances. Complex legacy pattern expressions and exhaustive
-RFC 5545 interoperability remain unsupported.
+RFC 5545 interoperability remain unsupported. Weekly rules may set `weekStart` with JavaScript
+weekday numbering; it defaults to Monday and is independent of locale `firstDayOfWeek`.

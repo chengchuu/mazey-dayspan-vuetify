@@ -5,7 +5,7 @@ This is an independent successor and is not maintained or endorsed by the origin
 
 ## Install
 
-Requires Vue 3.5, and Vuetify 3.12.
+Requires Vue 3.5 and Vuetify 3.12.
 
 ```sh
 pnpm add mazey-dayspan-vuetify vue vuetify
@@ -27,16 +27,83 @@ app.use(MazeyDaySpanVuetify, { locale: 'en', defaults: { eventColor: '#1976d2' }
 app.mount('#app')
 ```
 
-The plugin registers the `Md` components. Tree-shakable usage is also supported:
+The plugin registers the original `Ds` component names. Tree-shakable usage is also supported:
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { MdCalendar, type CalendarEvent } from 'mazey-dayspan-vuetify'
+import { DsCalendar, type CalendarEvent } from 'mazey-dayspan-vuetify'
 const events = ref<CalendarEvent[]>([{ id:'1', title:'Planning', start:new Date(), end:new Date(Date.now()+3600000) }])
 </script>
-<template><MdCalendar :events="events" view="month" /></template>
+<template><DsCalendar :events="events" view="month" /></template>
 ```
+
+Original high-level component names are preserved for faster migration: `DsCalendarApp`,
+`DsCalendar`, `DsWeeksView`, `DsDaysView`, `DsDayTimes`, `DsAgenda`, `DsEvent`,
+`DsEventDialog`, and `DsSchedule`. Component contracts use Vue 3 conventions even though the
+original names are retained.
+
+## Simple migration from `dayspan-vuetify`
+
+The original Vue 2 plugin accepted a Vue component definition and exposed the resulting instance as
+`this.$dayspan` and `Vue.$dayspan`:
+
+```js
+import DaySpanVuetify from 'dayspan-vuetify'
+
+Vue.use(DaySpanVuetify, {
+  data: {
+    // data overrides
+  },
+  computed: {
+    // computed overrides
+  },
+  methods: {
+    // method overrides
+  },
+})
+```
+
+In Vue 3, install the new package on the application and pass typed configuration instead:
+
+```js
+import { createApp } from 'vue'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import DaySpanVuetify from 'mazey-dayspan-vuetify'
+import 'vuetify/styles'
+import 'mazey-dayspan-vuetify/style.css'
+import App from './App.vue'
+
+const app = createApp(App)
+const vuetify = createVuetify({ components, directives })
+
+app.use(vuetify)
+app.use(DaySpanVuetify, {
+  locale: 'en',
+  defaults: {
+    eventColor: '#1976d2',
+  },
+})
+
+app.mount('#app')
+```
+
+Replace `$dayspan` access with the composable inside Vue components:
+
+```vue
+<script setup>
+import { useMazeyDaySpan } from 'mazey-dayspan-vuetify'
+
+const dayspan = useMazeyDaySpan()
+dayspan.setLocale('en')
+</script>
+```
+
+Arbitrary `data`, `computed`, and `methods` overrides are no longer accepted. Keep application-specific
+state in your own composables and use the library's typed options, slots, events, and composables as
+extension points.
 
 ## Event and recurrence model
 
@@ -46,10 +113,13 @@ extensible rather than a leaked DaySpan class API.
 ```ts
 const weekly: CalendarEvent = {
   id: 'review', title: 'Review', start: new Date('2026-07-06T14:00:00'), end: new Date('2026-07-06T15:00:00'),
-  schedule: { recurrence: { frequency: 'weekly', interval: 1, byWeekday: [1], count: 12 },
+  schedule: { recurrence: { frequency: 'weekly', interval: 1, byWeekday: [1], weekStart: 1, count: 12 },
     exclusions: [new Date('2026-07-20T14:00:00')] }
 }
 ```
+
+Weekdays use JavaScript numbering (`0` Sunday through `6` Saturday). Weekly interval buckets begin
+on `weekStart`, which defaults to Monday (`1`) and is independent of the active display locale.
 
 ## Localization and global defaults
 

@@ -21,13 +21,19 @@ already available through the core `moveOccurrence` function.
 
 | Slot | Component | Scope | Purpose |
 | --- | --- | --- | --- |
-| `toolbar` | `MdCalendar` | date, view, navigate, setView | Replace the calendar toolbar |
+| `toolbar` | `DsCalendar` | date, view, navigate, setView | Replace the calendar toolbar |
 | `event` | calendar views | event, day | Safe rich event rendering |
-| `date-title` | `MdMonthView` | day | Customize a date label |
+| `date-title` | `DsWeeksView` | day | Customize a date label |
 | `empty` | calendar/agenda | day where applicable | Empty state |
-| `agenda-event` | `MdAgenda`, calendar | event | Agenda row rendering |
-| `actions` | `MdEventDialog` | save, close, remove, valid | Dialog actions |
-| `before`, `after` | `MdScheduleEditor` | schedule | Extend recurrence fields |
+| `agenda-event` | `DsAgenda`, calendar | event | Agenda row rendering |
+| `actions` | `DsEventDialog` | save, close, remove, valid | Dialog actions |
+| `before`, `after` | `DsSchedule` | schedule | Extend recurrence fields |
 
 Slots are trusted application templates. Event title, description, and location are otherwise always
 rendered as plain text.
+
+## Weekly recurrence alignment
+
+`RecurrenceRule.weekStart` explicitly controls the first day used to align weekly `interval`
+buckets. It accepts JavaScript weekday values from `0` (Sunday) through `6` (Saturday) and defaults
+to Monday (`1`). Recurrence alignment does not change when the display locale changes.

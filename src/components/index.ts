@@ -7,24 +7,25 @@ import MdMonthView from './MdMonthView.vue'
 import MdScheduleEditor from './MdScheduleEditor.vue'
 import MdWeekView from './MdWeekView.vue'
 
-export {
-  MdAgenda,
-  MdCalendar,
-  MdCalendarApp,
-  MdDayView,
-  MdEventDialog,
-  MdMonthView,
-  MdScheduleEditor,
-  MdWeekView,
-}
+// Public names retained from dayspan-vuetify. Implementation filenames are internal.
+export const DsAgenda = MdAgenda
+export const DsCalendar = MdCalendar
+export const DsCalendarApp = MdCalendarApp
+export const DsDayTimes = MdDayView
+export const DsDaysView = MdWeekView
+export const DsEvent = MdEventDialog
+export const DsEventDialog = MdEventDialog
+export const DsSchedule = MdScheduleEditor
+export const DsWeeksView = MdMonthView
 
 export const components = [
-  MdAgenda,
-  MdCalendar,
-  MdCalendarApp,
-  MdDayView,
-  MdEventDialog,
-  MdMonthView,
-  MdScheduleEditor,
-  MdWeekView,
+  DsAgenda,
+  DsCalendar,
+  DsCalendarApp,
+  DsDayTimes,
+  DsDaysView,
+  DsEvent,
+  DsEventDialog,
+  DsSchedule,
+  DsWeeksView,
 ]

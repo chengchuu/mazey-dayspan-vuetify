@@ -1,12 +1,14 @@
 export type CalendarView = 'month' | 'week' | 'day' | 'agenda'
 export type RecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly'
+export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export interface CalendarRange { start: Date; end: Date }
 export interface CalendarDay { date: Date; key: string; isToday: boolean; inCurrentPeriod: boolean }
 export interface RecurrenceRule {
   frequency: RecurrenceFrequency
   interval?: number
-  byWeekday?: number[]
+  byWeekday?: Weekday[]
+  weekStart?: Weekday
   byMonthDay?: number[]
   byMonth?: number[]
   count?: number
