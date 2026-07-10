@@ -77,7 +77,7 @@ for an application-defined explicit HTML extension, but no built-in component in
 
 ## Accessibility and browser support
 
-Calendar events, dates, navigation, and view controls are semantic buttons with labels and visible focus.
+Calendar events, dates, navigation, and view controls are semantic buttons with labels and visible focus. Date controls support Shift+Enter and Shift+Space to request event creation without a pointer.
 Dialogs use Vuetify's focus/escape behavior; reduced motion is honored. Roving grid focus, automated screen
 reader coverage, and full keyboard drag/resize remain roadmap work. Targets are current evergreen browsers;
 the 1.0 support matrix will be finalized after cross-browser CI.

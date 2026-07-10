@@ -15,6 +15,11 @@ const weekdayNames = computed(() => Array.from({length:7}, (_, index) => {
   const day = new Date(2024, 0, 7 + ((dayspan.currentLocale.value.firstDayOfWeek + index) % 7))
   return dayspan.formatDate(day, { weekday:'short' })
 }))
+function requestCreateWithKeyboard(event:{ shiftKey:boolean; key:string; preventDefault():void }, day:CalendarDay) {
+  if (!event.shiftKey || (event.key !== 'Enter' && event.key !== ' ')) return
+  event.preventDefault()
+  emit('eventCreateRequest', day)
+}
 </script>
 <template>
   <div class="md-month" role="grid" :aria-label="dayspan.t('month')">
@@ -22,7 +27,7 @@ const weekdayNames = computed(() => Array.from({length:7}, (_, index) => {
       {{ name }}
     </div>
     <div v-for="day in days" :key="day.key" class="md-month__day" :class="{'is-today':day.isToday,'is-outside':!day.inCurrentPeriod}" role="gridcell">
-      <button class="md-month__date" type="button" :aria-label="dayspan.formatDate(day.date,{dateStyle:'full'})" @click="emit('dayClick',day)" @dblclick="emit('eventCreateRequest',day)">
+      <button class="md-month__date" type="button" :aria-label="dayspan.formatDate(day.date,{dateStyle:'full'})" aria-keyshortcuts="Shift+Enter Shift+Space" @click="emit('dayClick',day)" @dblclick="emit('eventCreateRequest',day)" @keydown="requestCreateWithKeyboard($event,day)">
         <slot name="date-title" :day="day">
           {{ day.date.getDate() }}
         </slot>

@@ -5,7 +5,7 @@
 | Event | Component | Trigger | Payload | Cancellation |
 | --- | --- | --- | --- | --- |
 | `eventClick` | calendar/views/app | Event button activation | `CalendarOccurrence` | Not cancellable |
-| `eventCreateRequest` | calendar/views | Day double activation | `CalendarDay` | Host chooses whether to open an editor |
+| `eventCreateRequest` | calendar/views | Day double activation or Shift+Enter/Shift+Space on a date control | `CalendarDay` | Host chooses whether to open an editor |
 | `eventCreate` | dialog/app | Valid new draft saved | `CalendarEvent` | Validate or ignore in host |
 | `eventUpdate` | dialog/app | Valid edited draft saved | `CalendarEvent` | Validate or ignore in host |
 | `eventRemove` | dialog/app | Delete action | `CalendarEvent` | Confirm before passing data if required |

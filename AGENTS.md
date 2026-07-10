@@ -58,7 +58,7 @@ When adding a public component:
 
 Do not rely on SFC runtime `component.name` inference for global registration.
 
-When changing public types, plugin options, events, slots, locale keys, package exports, or CSS entry points, update the README and migration documentation. Do not bump the package version unless the user explicitly requests a release/version change.
+When changing public types, plugin options, events, slots, locale keys, package exports, or CSS entry points, update the README and migration documentation. Preserve the current package version unless the task explicitly includes release or versioning work; do not independently alter it as part of an unrelated change.
 
 ## Scheduling and date rules
 
