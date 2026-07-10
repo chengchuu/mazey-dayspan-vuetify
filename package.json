@@ -1,6 +1,6 @@
 {
-  "name":"mazey-dayspan-vuetify","version":"3.0.0","description":"A modern Vue 3 and Vuetify calendar and scheduling component library inspired by DaySpan Vuetify.","license":"MIT","type":"module","private":false,
-  "repository":{"type":"git","url":"https://github.com/mazeyqian/mazey-dayspan-vuetify.git"},
+  "name":"mazey-dayspan-vuetify","version":"3.0.1","description":"A modern Vue 3 and Vuetify calendar and scheduling component library inspired by DaySpan Vuetify.","license":"MIT","type":"module","private":false,
+  "repository":{"type":"git","url":"https://github.com/chengchuu/mazey-dayspan-vuetify.git"},
   "engines":{"node":"^22.12.0 || >=24.0.0"},"packageManager":"pnpm@10.13.1",
   "main":"./dist/index.js","module":"./dist/index.js","types":"./dist/index.d.ts",
   "exports":{".":{"types":"./dist/index.d.ts","import":"./dist/index.js"},"./style.css":"./dist/style.css","./package.json":"./package.json"},
