@@ -34,4 +34,5 @@ export interface CalendarEvent {
 }
 export interface CalendarOccurrence extends CalendarEvent { sourceEventId: string; originalStart: Date }
 export interface EventMovePayload { event: CalendarEvent; start: Date; end: Date; occurrenceStart?: Date }
-export interface EventValidationResult { valid: boolean; errors: string[] }
+export type EventValidationError = 'idRequired' | 'titleRequired' | 'startInvalid' | 'endInvalid' | 'endAfterStart'
+export interface EventValidationResult { valid: boolean; errors: EventValidationError[] }

@@ -24,8 +24,8 @@ test('shows generated recurring occurrences in agenda', async ({ page }) => {
   await expect(page.getByRole('button', { name:/Weekly review/ })).toHaveCount(4)
 })
 
-test('toolbar remains keyboard operable on mobile', async ({ page, isMobile }) => {
-  test.skip(!isMobile)
+test('toolbar remains keyboard operable on mobile', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'This scenario only applies to the mobile project')
   await page.goto('/')
   await page.getByRole('button', { name:'Today' }).focus()
   await page.keyboard.press('Tab')

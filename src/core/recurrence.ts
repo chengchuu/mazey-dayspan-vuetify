@@ -1,5 +1,5 @@
-import type { CalendarEvent, CalendarOccurrence, CalendarRange, OccurrenceOverride, RecurrenceRule } from '../types'
-import { addDays, startOfDay } from './date'
+import type { CalendarEvent, CalendarOccurrence, CalendarRange, EventValidationError, OccurrenceOverride, RecurrenceRule } from '../types'
+import { addDays, DAY_MS, startOfDay, startOfWeek } from './date'
 
 const sameInstant = (a: Date, b: Date) => a.getTime() === b.getTime()
 const matchesList = (value: number, list?: number[]) => !list?.length || list.includes(value)
@@ -11,8 +11,22 @@ function advance(date: Date, rule: RecurrenceRule) {
   else next.setFullYear(next.getFullYear() + interval)
   return next
 }
-function ruleMatches(date: Date, rule: RecurrenceRule) {
-  return matchesList(date.getDay(), rule.byWeekday) && matchesList(date.getDate(), rule.byMonthDay) && matchesList(date.getMonth() + 1, rule.byMonth)
+function calendarDayIndex(date: Date) {
+  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / DAY_MS
+}
+function matchesWeeklyInterval(date: Date, recurrenceStart: Date, rule: RecurrenceRule) {
+  if (rule.frequency !== 'weekly') return true
+  const interval = Math.max(1, rule.interval ?? 1)
+  const anchorWeek = startOfWeek(recurrenceStart, 0)
+  const candidateWeek = startOfWeek(date, 0)
+  const elapsedWeeks = Math.floor((calendarDayIndex(candidateWeek) - calendarDayIndex(anchorWeek)) / 7)
+  return elapsedWeeks >= 0 && elapsedWeeks % interval === 0
+}
+function ruleMatches(date: Date, recurrenceStart: Date, rule: RecurrenceRule) {
+  return matchesWeeklyInterval(date, recurrenceStart, rule)
+    && matchesList(date.getDay(), rule.byWeekday)
+    && matchesList(date.getDate(), rule.byMonthDay)
+    && matchesList(date.getMonth() + 1, rule.byMonth)
 }
 function overrideFor(date: Date, overrides: OccurrenceOverride[] = []) { return overrides.find((item) => sameInstant(item.originalStart, date)) }
 function occurrence(event: CalendarEvent, start: Date, originalStart = start): CalendarOccurrence {
@@ -32,7 +46,7 @@ export function expandEvent(event: CalendarEvent, range: CalendarRange, limit = 
   let produced = 0
   for (let checked = 0; checked < limit && cursor < range.end; checked++) {
     if (rule.until && cursor > rule.until) break
-    if (ruleMatches(cursor, rule)) {
+    if (ruleMatches(cursor, event.start, rule)) {
       produced++
       if ((!rule.count || produced <= rule.count) && !excluded.has(cursor.toISOString()) && !cancelled.has(cursor.toISOString()) && event.end.getTime() - event.start.getTime() + cursor.getTime() > range.start.getTime()) results.push(occurrence(event, cursor))
       if (rule.count && produced >= rule.count) break
@@ -50,7 +64,7 @@ function updateOverride(event: CalendarEvent, value: OccurrenceOverride): Calend
   return { ...event, schedule: { ...event.schedule, overrides: [...overrides, value] } }
 }
 export function validateEvent(event: CalendarEvent) {
-  const errors: string[] = []
+  const errors: EventValidationError[] = []
   if (!event.id.trim()) errors.push('idRequired')
   if (!event.title.trim()) errors.push('titleRequired')
   if (!(event.start instanceof Date) || Number.isNaN(event.start.getTime())) errors.push('startInvalid')
