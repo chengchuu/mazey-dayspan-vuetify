@@ -112,9 +112,9 @@ extensible rather than a leaked DaySpan class API.
 
 ```ts
 const weekly: CalendarEvent = {
-  id: 'review', title: 'Review', start: new Date('2026-07-06T14:00:00'), end: new Date('2026-07-06T15:00:00'),
+  id: 'review', title: 'Review', start: new Date(2026, 6, 6, 14), end: new Date(2026, 6, 6, 15),
   schedule: { recurrence: { frequency: 'weekly', interval: 1, byWeekday: [1], weekStart: 1, count: 12 },
-    exclusions: [new Date('2026-07-20T14:00:00')] }
+    exclusions: [new Date(2026, 6, 20, 14)] }
 }
 ```
 

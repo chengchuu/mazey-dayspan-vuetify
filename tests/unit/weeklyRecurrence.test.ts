@@ -25,7 +25,7 @@ function eventWithCount(count?: number): CalendarEvent {
   }
 }
 
-function boundaryEvent(weekStart?:Weekday):CalendarEvent {
+function boundaryEvent(weekStart?: Weekday): CalendarEvent {
   return {
     id: 'week-boundary',
     title: 'Week boundary',
@@ -66,7 +66,10 @@ describe('weekly recurrence intervals', () => {
   })
 
   it('defaults weekly interval alignment to Monday', () => {
-    const boundaryRange = { start:new Date(2026, 6, 5), end:new Date(2026, 7, 1) }
+    const boundaryRange: CalendarRange = {
+      start: new Date(2026, 6, 5),
+      end: new Date(2026, 7, 1),
+    }
     const implicit = expandEvent(boundaryEvent(), boundaryRange)
     const explicit = expandEvent(boundaryEvent(1), boundaryRange)
 
@@ -80,7 +83,10 @@ describe('weekly recurrence intervals', () => {
   })
 
   it('aligns interval buckets to an explicit Sunday week start', () => {
-    const boundaryRange = { start:new Date(2026, 6, 5), end:new Date(2026, 7, 1) }
+    const boundaryRange: CalendarRange = {
+      start: new Date(2026, 6, 5),
+      end: new Date(2026, 7, 1),
+    }
     const occurrences = expandEvent(boundaryEvent(0), boundaryRange)
 
     expect(occurrences.map((item) => dateKey(item.start))).toEqual([
