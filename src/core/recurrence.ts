@@ -167,7 +167,7 @@ function* generatedStarts(event: CalendarEvent, range: CalendarRange, rule: Recu
     period++
   }
 }
-function isRuleOccurrence(event: CalendarEvent, originalStart: Date, rule: RecurrenceRule, limit: number) {
+function isRuleOccurrence(event: CalendarEvent, originalStart: Date, rule: RecurrenceRule) {
   const end = new Date(originalStart.getTime() + 1)
   let produced = 0
   for (const candidate of generatedStarts(event, { start:originalStart, end }, rule)) {
@@ -175,7 +175,7 @@ function isRuleOccurrence(event: CalendarEvent, originalStart: Date, rule: Recur
     if (rule.until && candidate > rule.until) return false
     if (rule.count && produced > rule.count) return false
     if (sameInstant(candidate, originalStart)) return true
-    if (candidate > originalStart || produced >= limit) return false
+    if (candidate > originalStart) return false
   }
   return false
 }
@@ -204,7 +204,7 @@ export function expandEvent(event: CalendarEvent, range: CalendarRange, limit = 
   }
   for (const override of schedule.overrides ?? []) {
     if (override.cancelled || excluded.has(override.originalStart.toISOString()) || results.some((item) => sameInstant(item.originalStart, override.originalStart))) continue
-    if (!isRuleOccurrence(event, override.originalStart, rule, limit)) continue
+    if (!isRuleOccurrence(event, override.originalStart, rule)) continue
     const item = occurrence(event, override.originalStart)
     if (intersectsRange(item, range)) results.push(item)
   }

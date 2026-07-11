@@ -71,6 +71,15 @@ describe('recurrence range and calendar boundaries', () => {
     expect(occurrences.some((item) => item.originalStart.getDate() === 10 && item.start.getHours() === 14)).toBe(true)
   })
 
+  it('backfills valid overrides beyond the output limit for counted rules', () => {
+    const base = { ...event, start:new Date(2020, 0, 1, 9), end:new Date(2020, 0, 1, 10), schedule:{ recurrence:{ frequency:'daily' as const, count:3000 } } }
+    const originalStart = new Date(2026, 11, 1, 9)
+    const moved = moveOccurrence(base, originalStart, new Date(2026, 6, 1, 14), new Date(2026, 6, 1, 15))
+    const occurrences = expandEvent(moved, { start:new Date(2026, 6, 1), end:new Date(2026, 6, 2) })
+
+    expect(occurrences.some((item) => item.originalStart.getTime() === originalStart.getTime() && item.start.getHours() === 14)).toBe(true)
+  })
+
   it('fails safely for invalid runtime recurrence values', () => {
     const invalid = { ...event, schedule:{ recurrence:{ frequency:'daily' as const, interval:Number.NaN } } }
     expect(expandEvent(invalid, range)).toEqual([])
