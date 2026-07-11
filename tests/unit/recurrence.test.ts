@@ -1,6 +1,6 @@
 import { describe,expect,it } from 'vitest'; import { cancelOccurrence,expandEvent,isValidRecurrenceRule,moveOccurrence,validateEvent } from '../../src/core/recurrence'; import type { CalendarEvent,CalendarRange } from '../../src/types'
-const range:CalendarRange={start:new Date('2026-07-01T00:00:00'),end:new Date('2026-07-15T00:00:00')};const event:CalendarEvent={id:'standup',title:'Standup',start:new Date('2026-07-01T09:00:00'),end:new Date('2026-07-01T09:30:00'),schedule:{recurrence:{frequency:'daily',count:5},exclusions:[new Date('2026-07-03T09:00:00')],inclusions:[new Date('2026-07-10T09:00:00')]}}
-describe('recurrence',()=>{it('generates rules plus inclusions and exclusions',()=>expect(expandEvent(event,range).map(item=>item.start.getDate())).toEqual([1,2,4,5,10]));it('cancels one occurrence immutably',()=>{const changed=cancelOccurrence(event,new Date('2026-07-02T09:00:00'));expect(expandEvent(changed,range).some(item=>item.start.getDate()===2)).toBe(false);expect(event.schedule?.overrides).toBeUndefined()});it('moves one occurrence while retaining its identity',()=>{const changed=moveOccurrence(event,new Date('2026-07-02T09:00:00'),new Date('2026-07-02T14:00:00'),new Date('2026-07-02T15:00:00'));expect(expandEvent(changed,range)[1]?.start.getHours()).toBe(14)});it('validates meaningful fields and chronological bounds',()=>expect(validateEvent({...event,title:'',end:event.start}).errors).toEqual(['titleRequired','endAfterStart']))})
+const range:CalendarRange={start:new Date(2026,6,1),end:new Date(2026,6,15)};const event:CalendarEvent={id:'standup',title:'Standup',start:new Date(2026,6,1,9),end:new Date(2026,6,1,9,30),schedule:{recurrence:{frequency:'daily',count:5},exclusions:[new Date(2026,6,3,9)],inclusions:[new Date(2026,6,10,9)]}}
+describe('recurrence',()=>{it('generates rules plus inclusions and exclusions',()=>expect(expandEvent(event,range).map(item=>item.start.getDate())).toEqual([1,2,4,5,10]));it('cancels one occurrence immutably',()=>{const changed=cancelOccurrence(event,new Date(2026,6,2,9));expect(expandEvent(changed,range).some(item=>item.start.getDate()===2)).toBe(false);expect(event.schedule?.overrides).toBeUndefined()});it('moves one occurrence while retaining its identity',()=>{const changed=moveOccurrence(event,new Date(2026,6,2,9),new Date(2026,6,2,14),new Date(2026,6,2,15));expect(expandEvent(changed,range)[1]?.start.getHours()).toBe(14)});it('validates meaningful fields and chronological bounds',()=>expect(validateEvent({...event,title:'',end:event.start}).errors).toEqual(['titleRequired','endAfterStart']))})
 
 describe('recurrence range and calendar boundaries', () => {
   it('fast-forwards an old unbounded daily series into the requested range', () => {
@@ -9,11 +9,11 @@ describe('recurrence range and calendar boundaries', () => {
   })
 
   it('filters moved occurrences by their effective range while retaining identity', () => {
-    const movedOut = moveOccurrence(event, new Date('2026-07-02T09:00:00'), new Date('2026-07-20T09:00:00'), new Date('2026-07-20T09:30:00'))
+    const movedOut = moveOccurrence(event, new Date(2026, 6, 2, 9), new Date(2026, 6, 20, 9), new Date(2026, 6, 20, 9, 30))
     expect(expandEvent(movedOut, range).some((item) => item.start.getDate() === 20)).toBe(false)
 
-    const base = { ...event, start:new Date('2026-06-30T09:00:00'), end:new Date('2026-06-30T09:30:00'), schedule:{ recurrence:{ frequency:'daily' as const, count:1 } } }
-    const movedIn = moveOccurrence(base, base.start, new Date('2026-07-02T09:00:00'), new Date('2026-07-02T09:30:00'))
+    const base = { ...event, start:new Date(2026, 5, 30, 9), end:new Date(2026, 5, 30, 9, 30), schedule:{ recurrence:{ frequency:'daily' as const, count:1 } } }
+    const movedIn = moveOccurrence(base, base.start, new Date(2026, 6, 2, 9), new Date(2026, 6, 2, 9, 30))
     expect(expandEvent(movedIn, range).map((item) => [item.start.getDate(), item.originalStart.getMonth()])).toEqual([[2, 5]])
   })
 
