@@ -14,7 +14,7 @@ The package must remain:
 - Safe by default, accessible, localized, and host-application friendly.
 - Free of Vue private APIs, prototype mutation, and global framework patches.
 
-Use pnpm. The supported runtime is Node.js 22.12 or newer, as declared in `package.json`.
+Use npm. The supported runtime is Node.js 22.12 or newer, as declared in `package.json`.
 
 ## Repository layout
 
@@ -123,17 +123,17 @@ Mobile-only Playwright tests should check `testInfo.project.name === 'mobile'`; 
 The standard validation sequence is:
 
 ```sh
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
+npm run lint
+npm run typecheck
+npm test
+npm run build
 ```
 
 For interaction, documentation, or playground changes, also run:
 
 ```sh
-pnpm test:e2e
-pnpm docs:build
+npm run test:e2e
+npm run docs:build
 ```
 
 If Playwright browsers are unavailable, report that limitation instead of claiming the E2E suite passed.
@@ -149,7 +149,7 @@ The package must continue to emit:
 - `dist/index.js.map`
 - `dist/style.css`
 
-Do not bundle Vue or Vuetify. Verify packaging with `pnpm pack --pack-destination /tmp` when changing exports, build output, files allowlists, or release metadata.
+Do not bundle Vue or Vuetify. Verify packaging with `npm pack --pack-destination /tmp` when changing exports, build output, files allowlists, or release metadata.
 
 The documentation site is currently the Vite application under `playground/`. Preserve its favicon, locale demonstration, dark-mode example, recurrence editor, and custom event rendering when changing the page shell.
 

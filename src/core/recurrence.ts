@@ -170,7 +170,7 @@ function* generatedStarts(event: CalendarEvent, range: CalendarRange, rule: Recu
 function isRuleOccurrence(event: CalendarEvent, originalStart: Date, rule: RecurrenceRule, limit: number) {
   const end = new Date(originalStart.getTime() + 1)
   let produced = 0
-  for (const candidate of generatedStarts(event, { start:event.start, end }, rule)) {
+  for (const candidate of generatedStarts(event, { start:originalStart, end }, rule)) {
     produced++
     if (rule.until && candidate > rule.until) return false
     if (rule.count && produced > rule.count) return false

@@ -8,7 +8,7 @@ This is an independent successor and is not maintained or endorsed by the origin
 Requires Vue 3.5 and Vuetify 3.12.
 
 ```sh
-pnpm add mazey-dayspan-vuetify vue vuetify
+npm install mazey-dayspan-vuetify vue vuetify
 ```
 
 ```ts
@@ -155,14 +155,14 @@ the 1.0 support matrix will be finalized after cross-browser CI.
 ## Playground and development
 
 ```sh
-pnpm install
-pnpm dev
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
-pnpm test:e2e
-pnpm docs:build
+npm install
+npm run dev
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run test:e2e
+npm run docs:build
 ```
 
 The playground demonstrates all views, creation/editing, recurrence, runtime locale switching, dark mode,
