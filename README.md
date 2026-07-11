@@ -177,8 +177,3 @@ The playground demonstrates all views, creation/editing, recurrence, runtime loc
 and custom event rendering. Contributions should include typed public contracts, focused tests, updated docs,
 and successful validation. See the [architecture assessment](docs/architecture-assessment.md),
 [migration guide](docs/migration-from-dayspan-vuetify.md), and [roadmap](docs/roadmap.md).
-
-[npm-version-image]: https://img.shields.io/npm/v/mazey-dayspan-vuetify.svg
-[npm-url]: https://www.npmjs.com/package/mazey-dayspan-vuetify
-[license-image]: https://img.shields.io/npm/l/mazey-dayspan-vuetify.svg
-[license-url]: https://github.com/chengchuu/mazey-dayspan-vuetify/blob/main/LICENSE
