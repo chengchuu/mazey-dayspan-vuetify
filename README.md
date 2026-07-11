@@ -11,13 +11,13 @@
 A modern Vue 3 and Vuetify calendar and scheduling component library inspired by DaySpan Vuetify.
 This is an independent successor and is not maintained or endorsed by the original author.
 
-## Install
-
-Requires Vue 3.5 and Vuetify 3.12.
+## Installation
 
 ```sh
-npm install mazey-dayspan-vuetify vue vuetify
+npm install mazey-dayspan-vuetify
 ```
+
+## Usage
 
 ```ts
 import { createApp } from 'vue'
