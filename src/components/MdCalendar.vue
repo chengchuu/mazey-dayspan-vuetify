@@ -76,9 +76,9 @@ function today() {
         <slot name="event" v-bind="slotProps">
           {{ slotProps.event.title }}
         </slot>
-      </template><template #agenda-event="slotProps">
+      </template><template v-if="$slots['agenda-event']" #agenda-event="slotProps">
         <slot name="agenda-event" v-bind="slotProps" />
-      </template><template #empty>
+      </template><template v-if="$slots.empty" #empty>
         <slot name="empty" />
       </template>
     </component>

@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import MdCalendar from '../../src/components/MdCalendar.vue'
+import MdCalendarApp from '../../src/components/MdCalendarApp.vue'
 import { dateKey } from '../../src/core/date'
 import { createMazeyDaySpanContext, mazeyDaySpanKey } from '../../src/plugin/context'
 import type { CalendarEvent, CalendarRange } from '../../src/types'
@@ -58,5 +59,19 @@ describe('MdCalendar', () => {
       global,
     })
     expect(wrapper.find('.custom').text()).toBe('custom')
+  })
+
+  it('preserves built-in agenda event and empty fallbacks when slots are omitted', async () => {
+    const withEvent = mount(MdCalendar, { props:{ events, modelValue:new Date(2026, 6, 10), view:'agenda' }, global })
+    expect(withEvent.get('.md-agenda__event').text()).toContain(events[0]!.title)
+
+    const empty = mount(MdCalendar, { props:{ events:[], modelValue:new Date(2026, 6, 10), view:'agenda' }, global })
+    expect(empty.get('.md-empty').text()).toBe('No events')
+  })
+
+  it('forwards calendar-app date navigation through update:date', async () => {
+    const wrapper = mount(MdCalendarApp, { props:{ events, date:new Date(2026, 6, 10) }, global })
+    await wrapper.get('[aria-label="Next"]').trigger('click')
+    expect(dateKey(wrapper.emitted('update:date')?.[0]?.[0] as Date)).toBe('2026-08-01')
   })
 })

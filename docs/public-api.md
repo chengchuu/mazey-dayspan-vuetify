@@ -12,6 +12,7 @@
 | `dayClick` | calendar/views | Date button activation | `CalendarDay` | Not cancellable |
 | `viewChange` | calendar | View control activation | `CalendarView` | Controlled through `view` |
 | `rangeChange` | calendar | Navigation or view change | `CalendarRange` | Not cancellable |
+| `update:date` | calendar app | Navigation or Today activation | `Date` | Supports `v-model:date` |
 | `change` | schedule editor | Recurrence update | `EventSchedule` | Controlled through `modelValue` |
 
 `EventMovePayload` is exported for the drag/move API planned before 1.0. Occurrence movement is

@@ -1,5 +1,13 @@
 # mazey-dayspan-vuetify
 
+[![npm version][npm-version-image]][npm-url]
+[![license][license-image]][license-url]
+
+[npm-version-image]: https://img.shields.io/npm/v/mazey-dayspan-vuetify.svg
+[npm-url]: https://www.npmjs.com/package/mazey-dayspan-vuetify
+[license-image]: https://img.shields.io/npm/l/mazey-dayspan-vuetify.svg
+[license-url]: https://github.com/chengchuu/mazey-dayspan-vuetify/blob/main/LICENSE
+
 A modern Vue 3 and Vuetify calendar and scheduling component library inspired by DaySpan Vuetify.
 This is an independent successor and is not maintained or endorsed by the original author.
 
@@ -8,7 +16,7 @@ This is an independent successor and is not maintained or endorsed by the origin
 Requires Vue 3.5 and Vuetify 3.12.
 
 ```sh
-pnpm add mazey-dayspan-vuetify vue vuetify
+npm install mazey-dayspan-vuetify vue vuetify
 ```
 
 ```ts
@@ -112,9 +120,9 @@ extensible rather than a leaked DaySpan class API.
 
 ```ts
 const weekly: CalendarEvent = {
-  id: 'review', title: 'Review', start: new Date('2026-07-06T14:00:00'), end: new Date('2026-07-06T15:00:00'),
+  id: 'review', title: 'Review', start: new Date(2026, 6, 6, 14), end: new Date(2026, 6, 6, 15),
   schedule: { recurrence: { frequency: 'weekly', interval: 1, byWeekday: [1], weekStart: 1, count: 12 },
-    exclusions: [new Date('2026-07-20T14:00:00')] }
+    exclusions: [new Date(2026, 6, 20, 14)] }
 }
 ```
 
@@ -155,14 +163,14 @@ the 1.0 support matrix will be finalized after cross-browser CI.
 ## Playground and development
 
 ```sh
-pnpm install
-pnpm dev
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
-pnpm test:e2e
-pnpm docs:build
+npm install
+npm run dev
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run test:e2e
+npm run docs:build
 ```
 
 The playground demonstrates all views, creation/editing, recurrence, runtime locale switching, dark mode,

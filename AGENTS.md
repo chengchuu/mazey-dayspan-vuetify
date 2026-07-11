@@ -14,7 +14,7 @@ The package must remain:
 - Safe by default, accessible, localized, and host-application friendly.
 - Free of Vue private APIs, prototype mutation, and global framework patches.
 
-Use pnpm. The supported runtime is Node.js 22.12 or newer, as declared in `package.json`.
+Use npm. The supported runtime is Node.js 22.12 or newer, as declared in `package.json`.
 
 ## Repository layout
 
@@ -123,17 +123,17 @@ Mobile-only Playwright tests should check `testInfo.project.name === 'mobile'`; 
 The standard validation sequence is:
 
 ```sh
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
+npm run lint
+npm run typecheck
+npm test
+npm run build
 ```
 
 For interaction, documentation, or playground changes, also run:
 
 ```sh
-pnpm test:e2e
-pnpm docs:build
+npm run test:e2e
+npm run docs:build
 ```
 
 If Playwright browsers are unavailable, report that limitation instead of claiming the E2E suite passed.
@@ -149,9 +149,33 @@ The package must continue to emit:
 - `dist/index.js.map`
 - `dist/style.css`
 
-Do not bundle Vue or Vuetify. Verify packaging with `pnpm pack --pack-destination /tmp` when changing exports, build output, files allowlists, or release metadata.
+Do not bundle Vue or Vuetify. Verify packaging with `npm pack --pack-destination /tmp` when changing exports, build output, files allowlists, or release metadata.
 
 The documentation site is currently the Vite application under `playground/`. Preserve its favicon, locale demonstration, dark-mode example, recurrence editor, and custom event rendering when changing the page shell.
+
+## Playground SEO and deployment
+
+Treat `playground/` as both the interactive example and the public project website. Keep its visible content useful without relying on metadata alone: use semantic landmarks, a single descriptive `h1`, ordered heading levels, meaningful link text, and crawlable copy that accurately describes implemented features.
+
+Keep essential SEO metadata in `playground/index.html` so it is present in the initial HTML response. Preserve and update together when the public URL or page purpose changes:
+
+- A unique title and concise meta description.
+- The canonical URL `https://chengchuu.github.io/mazey-dayspan-vuetify/`.
+- Open Graph and Twitter metadata.
+- Valid JSON-LD describing the library as software.
+- The favicon at `//i.mazey.net/icon/fav/logo-dark-circle-transparent-32x32.png`.
+
+Keep `playground/public/robots.txt` and `playground/public/sitemap.xml` aligned with the canonical GitHub Pages URL. Do not add claims about features, accessibility conformance, browser support, or standards compliance unless the repository implementation and tests support them.
+
+GitHub Pages serves this site below `/mazey-dayspan-vuetify/`. Preserve `base: './'` in `playground/vite.config.ts` so generated JavaScript, CSS, and other build assets use relative URLs such as `./assets/index.js`; root-relative `/assets/...` URLs will fail after deployment.
+
+After changing the playground shell, metadata, or public crawl files, run `npm run docs:build` and inspect `playground/dist/index.html` to verify that:
+
+- Script and stylesheet URLs remain relative.
+- Canonical, social, and JSON-LD metadata remain present and valid.
+- `robots.txt` and `sitemap.xml` are copied into the build output.
+
+Do not commit or manually edit the generated `playground/dist/` files.
 
 ## Change discipline
 
