@@ -189,7 +189,7 @@ export function expandEvent(event: CalendarEvent, range: CalendarRange, limit = 
   const results: CalendarOccurrence[] = []
   let produced = 0
   for (const cursor of generatedStarts(event, range, rule)) {
-    if (produced >= limit) break
+    if (results.length >= limit) break
     if (rule.until && cursor > rule.until) break
     produced++
     const key = cursor.toISOString()

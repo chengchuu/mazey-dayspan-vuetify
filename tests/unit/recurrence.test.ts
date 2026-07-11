@@ -36,6 +36,13 @@ describe('recurrence range and calendar boundaries', () => {
     expect(expandEvent(yearly, { start:new Date(2030, 0, 1), end:new Date(2031, 0, 1) }).map((item) => [item.start.getMonth(), item.start.getDate()])).toEqual([[1,1]])
   })
 
+  it('applies the limit to occurrences returned inside the requested range', () => {
+    const counted = { ...event, start:new Date(2020, 0, 1, 9), end:new Date(2020, 0, 1, 10), schedule:{ recurrence:{ frequency:'daily' as const, count:3000 } } }
+    const distantRange = { start:new Date(2026, 0, 1), end:new Date(2026, 0, 10) }
+
+    expect(expandEvent(counted, distantRange, 2).map((item) => item.start.getDate())).toEqual([1, 2])
+  })
+
   it('rejects malformed runtime rule shapes without throwing', () => {
     expect(isValidRecurrenceRule({ frequency:'hourly' })).toBe(false)
     expect(isValidRecurrenceRule({ frequency:'weekly', byWeekday:'Monday' })).toBe(false)
