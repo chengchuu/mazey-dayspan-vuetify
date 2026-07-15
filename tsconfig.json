@@ -1,1 +1,29 @@
-{"compilerOptions":{"target":"ES2022","useDefineForClassFields":true,"module":"ESNext","moduleResolution":"Bundler","strict":true,"jsx":"preserve","resolveJsonModule":true,"isolatedModules":true,"esModuleInterop":true,"lib":["ES2022","DOM","DOM.Iterable"],"types":["vitest/globals","node"],"baseUrl":".","paths":{"mazey-dayspan-vuetify":["./src/index.ts"]},"skipLibCheck":true,"noUncheckedIndexedAccess":true,"noEmit":true},"include":["src/**/*.ts","src/**/*.vue","tests/**/*.ts","playground/**/*.ts","playground/**/*.vue","*.ts"]}
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vitest/globals", "node"],
+    "paths": {
+      "mazey-dayspan-vuetify": ["./src/index.ts"]
+    },
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "playground/**/*.ts",
+    "playground/**/*.vue",
+    "*.ts"
+  ]
+}
