@@ -3,5 +3,6 @@ coverage/
 dist/
 dist-dev/
 docs/
+guides/
 lib/
 .pnpm-store/

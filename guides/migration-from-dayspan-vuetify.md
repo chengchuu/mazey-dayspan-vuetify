@@ -44,7 +44,7 @@ Installing the plugin globally registers the preserved `Ds*` names.
 | mutable `handled` envelopes | Explicit typed payloads | Replaced | Host owns state updates |
 | global locale mutation | Context `registerLocale` / `setLocale` | Replaced | Partial overrides and fallback |
 | `dayspan-vuetify.min.css` | `mazey-dayspan-vuetify/style.css` | Replaced | Scoped tokens; no reset or icon font |
-| internal activator/toolbar slots | Semantic documented slots | Changed | See `docs/public-api.md` |
+| internal activator/toolbar slots | Semantic documented slots | Changed | See the [public API guide](./public-api.md) |
 | drag, resize, touch gestures | Pointer interaction | Planned | Not claimed as parity |
 
 ## Unsupported legacy component names

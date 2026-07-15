@@ -59,7 +59,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "docs:dev": "vite --config playground/vite.config.ts",
-    "docs:build": "vite build --config playground/vite.config.ts"
+    "docs:build": "npm run docs:links && vite build --config playground/vite.config.ts",
+    "docs:links": "node scripts/validate-doc-links.mjs"
   },
   "peerDependencies": {
     "vue": "^3.5.0",
