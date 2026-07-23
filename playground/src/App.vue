@@ -51,10 +51,20 @@ function remove(event: CalendarEvent) {
         <header class="hero">
           <nav class="site-nav" aria-label="Primary navigation">
             <a class="brand" href="#top" aria-label="mazey-dayspan-vuetify home">mazey-dayspan-vuetify</a>
-            <div class="site-nav__links">
-              <a href="#features">Features</a>
-              <a href="#demo">Demo</a>
-              <a href="#install">Install</a>
+            <div class="site-nav__actions">
+              <div class="site-nav__links">
+                <a href="#features">Features</a>
+                <a href="#demo">Demo</a>
+                <a href="#install">Install</a>
+              </div>
+              <VSwitch
+                v-model="dark"
+                class="site-nav__theme"
+                label="Dark mode"
+                density="compact"
+                hide-details
+                inset
+              />
             </div>
           </nav>
 
@@ -117,9 +127,11 @@ function remove(event: CalendarEvent) {
                 label="Locale"
                 :items="['en', 'zh-CN']"
                 :model-value="dayspan.locale.value"
+                density="comfortable"
+                hide-details
+                variant="outlined"
                 @update:model-value="dayspan.setLocale($event)"
               />
-              <VSwitch v-model="dark" label="Dark mode" />
             </div>
           </div>
 
@@ -190,6 +202,18 @@ body {
   margin: 0;
 }
 
+.v-theme--light {
+  --playground-border: #d8dde4;
+  --playground-muted: #5f6873;
+  --playground-surface: #f7f8fa;
+}
+
+.v-theme--dark {
+  --playground-border: #414852;
+  --playground-muted: #b5bdc8;
+  --playground-surface: #20252b;
+}
+
 .hero,
 .section,
 footer {
@@ -214,6 +238,12 @@ footer {
   text-decoration: none;
 }
 
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .brand {
   font-weight: 750;
   letter-spacing: -.02em;
@@ -222,6 +252,18 @@ footer {
 .site-nav__links {
   display: flex;
   gap: 1.25rem;
+}
+
+.site-nav__theme {
+  flex: 0 0 auto;
+}
+
+.site-nav__theme .v-selection-control {
+  min-height: 2.75rem;
+}
+
+.site-nav__theme .v-label {
+  opacity: 1;
 }
 
 .site-nav__links a:hover,
@@ -270,7 +312,7 @@ h2 {
 .section--split > div:first-child > p:last-child,
 .install > p {
   max-width: 700px;
-  color: color-mix(in srgb, currentColor 72%, transparent);
+  color: var(--playground-muted);
   font-size: 1.08rem;
   line-height: 1.7;
 }
@@ -292,7 +334,7 @@ h2 {
   align-items: center;
   min-height: 2.8rem;
   padding: 0 1.1rem;
-  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border: 1px solid var(--playground-border);
   border-radius: .55rem;
   color: inherit;
   font-weight: 650;
@@ -324,9 +366,9 @@ h2 {
 .demo-frame,
 .recurrence-demo,
 .install pre {
-  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border: 1px solid var(--playground-border);
   border-radius: 1rem;
-  background: color-mix(in srgb, currentColor 3%, transparent);
+  background: var(--playground-surface);
 }
 
 .feature-grid article {
@@ -339,7 +381,7 @@ h2 {
 
 .feature-grid p {
   margin: 0;
-  color: color-mix(in srgb, currentColor 70%, transparent);
+  color: var(--playground-muted);
   line-height: 1.65;
 }
 
@@ -352,10 +394,8 @@ h2 {
 }
 
 .demo-controls {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
-  align-items: center;
+  width: min(100%, 15rem);
+  justify-self: end;
 }
 
 .demo-frame {
@@ -386,11 +426,20 @@ code {
 
 footer {
   padding: 2rem 0 4rem;
-  border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
-  color: color-mix(in srgb, currentColor 68%, transparent);
+  border-top: 1px solid var(--playground-border);
+  color: var(--playground-muted);
 }
 
 @media (max-width: 760px) {
+  .site-nav {
+    align-items: flex-start;
+    padding-block: .75rem;
+  }
+
+  .site-nav__actions {
+    gap: 0;
+  }
+
   .site-nav__links {
     display: none;
   }
@@ -407,6 +456,10 @@ footer {
 
   .section {
     padding: 3.5rem 0;
+  }
+
+  .demo-controls {
+    justify-self: stretch;
   }
 }
 

@@ -32,3 +32,16 @@ test('toolbar remains keyboard operable on mobile', async ({ page }, testInfo) =
   await page.keyboard.press('Tab')
   await expect(page.getByRole('button', { name:'Next' })).toBeFocused()
 })
+
+test('keeps the theme control in the page header and preserves theme switching', async ({ page }) => {
+  await page.goto('/')
+  const themeControl = page.locator('header').getByRole('checkbox', { name:'Dark mode' })
+
+  await expect(themeControl).toBeVisible()
+  await expect(themeControl).not.toBeChecked()
+  await themeControl.focus()
+  await expect(themeControl).toBeFocused()
+  await page.keyboard.press('Space')
+  await expect(themeControl).toBeChecked()
+  await expect(page.locator('.v-application')).toHaveClass(/v-theme--dark/)
+})
