@@ -6,6 +6,7 @@ dist/
 dist-dev/
 lib/
 coverage/
+docs/
 
 # Test reports
 test/unit/coverage/
@@ -40,4 +41,3 @@ selenium-debug.log*
 pnpm-workspace.yaml
 playwright-report/
 test-results/
-playground/dist/

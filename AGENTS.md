@@ -30,9 +30,10 @@ Use npm. The supported runtime is Node.js 22.12 or newer, as declared in `packag
 - `tests/component/`: Vue Test Utils behavior and accessibility tests.
 - `tests/e2e/`: Playwright user workflows.
 - `playground/`: Vite demonstration and documentation application.
-- `docs/`: architecture, public API, migration, and roadmap documentation.
+- `guides/`: handwritten architecture, public API, migration, audit, and roadmap documentation.
+- `docs/`: generated GitHub Pages output only; do not store handwritten source here.
 
-Do not edit generated output under `dist/`, `playground/dist/`, Playwright reports, or coverage directories.
+Do not edit generated output under `dist/`, `docs/`, Playwright reports, or coverage directories.
 
 ## Architecture rules
 
@@ -54,7 +55,7 @@ When adding a public component:
 2. Export it from `src/components/index.ts`.
 3. Add its explicit name and component to `src/components/registry.ts` for plugin registration.
 4. Add focused component tests.
-5. Document public props, emits, and slots in `docs/public-api.md` and README examples where relevant.
+5. Document public props, emits, and slots in `guides/public-api.md` and README examples where relevant.
 
 Do not rely on SFC runtime `component.name` inference for global registration.
 
@@ -134,6 +135,7 @@ For interaction, documentation, or playground changes, also run:
 ```sh
 npm run test:e2e
 npm run docs:build
+npm run docs:links
 ```
 
 If Playwright browsers are unavailable, report that limitation instead of claiming the E2E suite passed.
@@ -151,7 +153,9 @@ The package must continue to emit:
 
 Do not bundle Vue or Vuetify. Verify packaging with `npm pack --pack-destination /tmp` when changing exports, build output, files allowlists, or release metadata.
 
-The documentation site is currently the Vite application under `playground/`. Preserve its favicon, locale demonstration, dark-mode example, recurrence editor, and custom event rendering when changing the page shell.
+The documentation site source is the Vite application under `playground/`, and `npm run docs:build`
+generates the deployable Pages artifact under `docs/`. Preserve its favicon, locale demonstration,
+dark-mode example, recurrence editor, and custom event rendering when changing the page shell.
 
 ## Playground SEO and deployment
 
@@ -169,13 +173,13 @@ Keep `playground/public/robots.txt` and `playground/public/sitemap.xml` aligned 
 
 GitHub Pages serves this site below `/mazey-dayspan-vuetify/`. Preserve `base: './'` in `playground/vite.config.ts` so generated JavaScript, CSS, and other build assets use relative URLs such as `./assets/index.js`; root-relative `/assets/...` URLs will fail after deployment.
 
-After changing the playground shell, metadata, or public crawl files, run `npm run docs:build` and inspect `playground/dist/index.html` to verify that:
+After changing the playground shell, metadata, or public crawl files, run `npm run docs:build` and inspect `docs/index.html` to verify that:
 
 - Script and stylesheet URLs remain relative.
 - Canonical, social, and JSON-LD metadata remain present and valid.
 - `robots.txt` and `sitemap.xml` are copied into the build output.
 
-Do not commit or manually edit the generated `playground/dist/` files.
+Do not commit or manually edit the generated `docs/` files.
 
 ## Change discipline
 

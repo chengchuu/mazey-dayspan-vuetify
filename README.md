@@ -147,7 +147,7 @@ and dark hosts; the library supplies no reset and assumes no icon font. Configur
 ## Slots, events, and security
 
 `toolbar`, `event`, `date-title`, `empty`, `agenda-event`, schedule extension, and dialog action slots are
-documented in [docs/public-api.md](docs/public-api.md). Public emits use typed tuple payloads.
+documented in the [public API guide](guides/public-api.md). Public emits use typed tuple payloads.
 
 Titles, descriptions, locations, and locale messages render as text. The library never silently injects
 event HTML. Use trusted Vue slot templates for rich content. A sanitizer can be provided in plugin options
@@ -171,9 +171,13 @@ npm test
 npm run build
 npm run test:e2e
 npm run docs:build
+npm run docs:links
 ```
 
 The playground demonstrates all views, creation/editing, recurrence, runtime locale switching, dark mode,
 and custom event rendering. Contributions should include typed public contracts, focused tests, updated docs,
-and successful validation. See the [architecture assessment](docs/architecture-assessment.md),
-[migration guide](docs/migration-from-dayspan-vuetify.md), and [roadmap](docs/roadmap.md).
+and successful validation. See the [architecture assessment](guides/architecture-assessment.md),
+[migration guide](guides/migration-from-dayspan-vuetify.md), and [roadmap](guides/roadmap.md).
+
+Handwritten documentation belongs in `guides/`. The documentation build writes the generated GitHub
+Pages artifact to `docs/`; do not edit or commit that output directly.
