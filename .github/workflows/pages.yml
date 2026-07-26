@@ -1,6 +1,9 @@
 name: Deploy playground
 on:
-  push: { branches: [main] }
+  push:
+    branches:
+      - main
+      - 'release/v*'
   workflow_dispatch:
 permissions: { contents: read, pages: write, id-token: write }
 concurrency: { group: pages, cancel-in-progress: false }
@@ -11,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
-        with: { node-version: 22, cache: npm }
-      - run: npm ci
+        with: { node-version: 22 }
+      - run: npm install
       - run: npm run docs:build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

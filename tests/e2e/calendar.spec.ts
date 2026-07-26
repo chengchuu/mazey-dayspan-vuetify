@@ -34,14 +34,19 @@ test('toolbar remains keyboard operable on mobile', async ({ page }, testInfo) =
 })
 
 test('keeps the theme control in the page header and preserves theme switching', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('MAZEY_DAYSPAN_VUETIFY_THEME', 'dark')
+  })
   await page.goto('/')
   const themeControl = page.locator('header').getByRole('checkbox', { name:'Dark mode' })
 
   await expect(themeControl).toBeVisible()
-  await expect(themeControl).not.toBeChecked()
+  await expect(themeControl).toBeChecked()
+  await expect(page.locator('.v-application')).toHaveClass(/v-theme--dark/)
   await themeControl.focus()
   await expect(themeControl).toBeFocused()
   await page.keyboard.press('Space')
-  await expect(themeControl).toBeChecked()
-  await expect(page.locator('.v-application')).toHaveClass(/v-theme--dark/)
+  await expect(themeControl).not.toBeChecked()
+  await expect(page.locator('.v-application')).toHaveClass(/v-theme--light/)
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('MAZEY_DAYSPAN_VUETIFY_THEME'))).toBe('light')
 })
