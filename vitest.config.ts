@@ -5,9 +5,10 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   plugins: [vue()],
   resolve: {
-    alias: {
-      'mazey-dayspan-vuetify': resolve(import.meta.dirname, 'src/index.ts'),
-    },
+    alias: [
+      { find:/^mazey-dayspan-vuetify$/, replacement:resolve(import.meta.dirname, 'src/index.ts') },
+      { find:/^mazey-dayspan-vuetify\/style\.css$/, replacement:resolve(import.meta.dirname, 'src/styles/main.scss') },
+    ],
   },
   test: {
     include: ['tests/unit/**/*.test.ts', 'tests/component/**/*.test.ts'],

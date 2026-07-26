@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       mazey:
-        specifier: ^5.4.2
-        version: 5.4.2
+        specifier: ^5.5.1
+        version: 5.5.1
     devDependencies:
       '@eslint/js':
         specifier: ^9.0.0
@@ -1452,8 +1452,8 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
 
-  mazey@5.4.2:
-    resolution: {integrity: sha512-wJNZeyRjFlREmjyRI1RLPZ4aWl0oRC6/hwhamEgYuv0MPSj+JR2H7CTdtXWGAf3xFTyU0HjYhzl7Az4CRu1POA==}
+  mazey@5.5.1:
+    resolution: {integrity: sha512-GmO07BgMLJjY3Aif3r5nHqrgyBgYNHfoqYpkWINGZosxtnNeZpLIvPTkEGJzHrLG99nTY0FUmRz6RpFueO5ODA==}
 
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -3364,7 +3364,7 @@ snapshots:
     dependencies:
       semver: 7.8.5
 
-  mazey@5.4.2: {}
+  mazey@5.5.1: {}
 
   merge2@1.4.1: {}
 
