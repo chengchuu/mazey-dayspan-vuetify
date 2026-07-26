@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import {
+  resolveThemePreference,
+  setThemePreference,
+  type ResolvedTheme,
+} from 'mazey'
 import {
   DsCalendarApp,
   DsSchedule,
@@ -9,9 +14,17 @@ import {
   type EventSchedule,
 } from 'mazey-dayspan-vuetify'
 
+const themeStorageKey = 'MAZEY_DAYSPAN_VUETIFY_THEME'
+const theme = ref<ResolvedTheme>(resolveThemePreference(themeStorageKey).value)
+const dark = computed({
+  get: () => theme.value === 'dark',
+  set: (enabled: boolean) => {
+    theme.value = enabled ? 'dark' : 'light'
+    setThemePreference(themeStorageKey, theme.value)
+  },
+})
 const dayspan = useMazeyDaySpan()
 const view = ref<CalendarView>('month')
-const dark = ref(false)
 const events = ref<CalendarEvent[]>([
   {
     id: 'welcome',
@@ -45,7 +58,7 @@ function remove(event: CalendarEvent) {
 </script>
 
 <template>
-  <VApp :theme="dark ? 'dark' : 'light'">
+  <VApp :theme="theme">
     <VMain>
       <main>
         <header class="hero">
