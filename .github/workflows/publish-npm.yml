@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - run: npm install
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
@@ -41,7 +41,7 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
+      - run: npm install
       - run: npm run build
 
       - name: Publish mazey-dayspan-vuetify to npm
