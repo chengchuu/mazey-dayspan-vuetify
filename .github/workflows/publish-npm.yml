@@ -2,9 +2,12 @@ name: Validate and publish
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - 'release/v*'
   push:
-    tags: ['v*']
+    branches:
+      - 'release/v*'
   workflow_dispatch:
 
 permissions:
@@ -27,7 +30,7 @@ jobs:
 
   publish:
     needs: validate
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: read
