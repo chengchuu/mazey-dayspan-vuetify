@@ -97,7 +97,7 @@ function remove(event: CalendarEvent) {
           </div>
         </header>
 
-        <section id="features" class="section section--narrow" aria-labelledby="features-title">
+        <section id="features" class="section" aria-labelledby="features-title">
           <p class="eyebrow">
             Built for application teams
           </p>
@@ -183,7 +183,7 @@ function remove(event: CalendarEvent) {
           </div>
         </section>
 
-        <section id="install" class="section section--narrow install" aria-labelledby="install-title">
+        <section id="install" class="section install" aria-labelledby="install-title">
           <p class="eyebrow">
             Get started
           </p>
@@ -362,10 +362,6 @@ h2 {
 
 .section {
   padding: 5rem 0;
-}
-
-.section--narrow {
-  width: min(1040px, calc(100% - 2rem));
 }
 
 .feature-grid {
