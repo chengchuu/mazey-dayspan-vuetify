@@ -191,7 +191,7 @@ function remove(event: CalendarEvent) {
             Install mazey-dayspan-vuetify
           </h2>
           <p>Use npm to add the library alongside its Vue and Vuetify peer dependencies.</p>
-          <pre><code>npm install mazey-dayspan-vuetify vue vuetify</code></pre>
+          <pre><code>npm install mazey-dayspan-vuetify</code></pre>
           <p>
             Migrating from the original library? Familiar high-level names such as
             <code>DsCalendar</code>, <code>DsCalendarApp</code>, and <code>DsSchedule</code> are retained.
