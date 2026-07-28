@@ -67,7 +67,7 @@ function remove(event: CalendarEvent) {
             <div class="site-nav__actions">
               <div class="site-nav__links">
                 <a href="#features">Features</a>
-                <a href="#demo">Demo</a>
+                <a href="#playground">Playground</a>
                 <a href="#install">Install</a>
               </div>
               <VSwitch
@@ -91,7 +91,7 @@ function remove(event: CalendarEvent) {
               recurring schedules, localization, and safe custom rendering.
             </p>
             <div class="hero__actions">
-              <a class="button button--primary" href="#demo">Explore the live demo</a>
+              <a class="button button--primary" href="#playground">Explore the live demo</a>
               <a class="button" href="#install">View installation</a>
             </div>
           </div>
@@ -124,7 +124,7 @@ function remove(event: CalendarEvent) {
           </div>
         </section>
 
-        <section id="demo" class="section" aria-labelledby="demo-title">
+        <section id="playground" class="section" aria-labelledby="demo-title">
           <div class="section-heading">
             <div>
               <p class="eyebrow">
@@ -191,7 +191,7 @@ function remove(event: CalendarEvent) {
             Install mazey-dayspan-vuetify
           </h2>
           <p>Use npm to add the library alongside its Vue and Vuetify peer dependencies.</p>
-          <pre><code>npm install mazey-dayspan-vuetify vue vuetify</code></pre>
+          <pre><code>npm install mazey-dayspan-vuetify</code></pre>
           <p>
             Migrating from the original library? Familiar high-level names such as
             <code>DsCalendar</code>, <code>DsCalendarApp</code>, and <code>DsSchedule</code> are retained.
