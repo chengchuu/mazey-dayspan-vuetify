@@ -218,7 +218,7 @@ Area: Vue
 ### Affected files
 
 - `src/components/MdCalendarApp.vue`
-- `guides/public-api.md`
+- `guides/PUBLIC_API.md`
 
 ### Reproduction
 
@@ -259,7 +259,7 @@ The requested consumer check using `MdCalendar` and `MdAgenda` fails because the
 ### Affected files
 
 - `src/components/index.ts`
-- `guides/public-api.md`
+- `guides/PUBLIC_API.md`
 - `AGENTS.md`
 
 ### Reproduction
@@ -302,7 +302,7 @@ The implementation uses local `Date` calendar arithmetic for recurrence starts b
 
 - `src/core/recurrence.ts`
 - `README.md`
-- `guides/roadmap.md`
+- `guides/PROJECT_ROADMAP.md`
 
 ### Reproduction
 

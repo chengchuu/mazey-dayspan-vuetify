@@ -55,7 +55,7 @@ When adding a public component:
 2. Export it from `src/components/index.ts`.
 3. Add its explicit name and component to `src/components/registry.ts` for plugin registration.
 4. Add focused component tests.
-5. Document public props, emits, and slots in `guides/public-api.md` and README examples where relevant.
+5. Document public props, emits, and slots in `guides/PUBLIC_API.md` and README examples where relevant.
 
 Do not rely on SFC runtime `component.name` inference for global registration.
 
@@ -142,7 +142,7 @@ If Playwright browsers are unavailable, report that limitation instead of claimi
 
 ## Documentation and packaging
 
-Keep package identity as `mazey-dayspan-vuetify` in metadata, examples, exports, and documentation. State that the project is an independent successor and preserve MIT attribution in `NOTICE.md`.
+Keep package identity as `mazey-dayspan-vuetify` in metadata, examples, exports, and documentation. State that the project is an independent successor and preserve MIT attribution in `guides/NOTICE.md`.
 
 The package must continue to emit:
 
