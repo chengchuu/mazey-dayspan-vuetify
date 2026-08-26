@@ -163,7 +163,7 @@ the 1.0 support matrix will be finalized after cross-browser CI.
 ## Playground and development
 
 ```sh
-npm install
+pnpm install
 npm run dev
 npm run lint
 npm run typecheck

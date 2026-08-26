@@ -1,4 +1,4 @@
-import type { Component } from 'vue'
+import type { Component } from "vue";
 import {
   DsAgenda,
   DsCalendar,
@@ -9,16 +9,16 @@ import {
   DsEventDialog,
   DsSchedule,
   DsWeeksView,
-} from './index'
+} from "./index";
 
 export const componentEntries = [
-  ['DsAgenda', DsAgenda],
-  ['DsCalendar', DsCalendar],
-  ['DsCalendarApp', DsCalendarApp],
-  ['DsDayTimes', DsDayTimes],
-  ['DsDaysView', DsDaysView],
-  ['DsEvent', DsEvent],
-  ['DsEventDialog', DsEventDialog],
-  ['DsSchedule', DsSchedule],
-  ['DsWeeksView', DsWeeksView],
-] as const satisfies ReadonlyArray<readonly [string, Component]>
+  ["DsAgenda", DsAgenda],
+  ["DsCalendar", DsCalendar],
+  ["DsCalendarApp", DsCalendarApp],
+  ["DsDayTimes", DsDayTimes],
+  ["DsDaysView", DsDaysView],
+  ["DsEvent", DsEvent],
+  ["DsEventDialog", DsEventDialog],
+  ["DsSchedule", DsSchedule],
+  ["DsWeeksView", DsWeeksView],
+] as const satisfies ReadonlyArray<readonly [string, Component]>;

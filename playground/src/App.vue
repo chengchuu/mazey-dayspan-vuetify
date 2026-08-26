@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref } from "vue";
 import {
   resolveThemePreference,
   setThemePreference,
   type ResolvedTheme,
-} from 'mazey'
+} from "mazey";
 import {
   DsCalendarApp,
   DsSchedule,
@@ -12,55 +12,56 @@ import {
   type CalendarEvent,
   type CalendarView,
   type EventSchedule,
-} from 'mazey-dayspan-vuetify'
+} from "mazey-dayspan-vuetify";
 
-const themeStorageKey = 'MAZEY_DAYSPAN_VUETIFY_THEME'
-const theme = ref<ResolvedTheme>(resolveThemePreference(themeStorageKey).value)
+const themeStorageKey = "MAZEY_DAYSPAN_VUETIFY_THEME";
+const theme = ref<ResolvedTheme>(resolveThemePreference(themeStorageKey).value);
 const dark = computed({
-  get: () => theme.value === 'dark',
+  get: () => theme.value === "dark",
   set: (enabled: boolean) => {
-    theme.value = enabled ? 'dark' : 'light'
-    setThemePreference(themeStorageKey, theme.value)
+    theme.value = enabled ? "dark" : "light";
+    setThemePreference(themeStorageKey, theme.value);
   },
-})
-const dayspan = useMazeyDaySpan()
-const view = ref<CalendarView>('month')
+});
+const dayspan = useMazeyDaySpan();
+const view = ref<CalendarView>("month");
+const date = ref(new Date(2026, 6, 10));
 const events = ref<CalendarEvent[]>([
   {
-    id: 'welcome',
-    title: 'Project planning',
+    id: "welcome",
+    title: "Project planning",
     start: new Date(2026, 6, 10, 9),
     end: new Date(2026, 6, 10, 10, 30),
-    color: '#1565c0',
-    description: 'A safe plain-text event.',
+    color: "#1565c0",
+    description: "A safe plain-text event.",
   },
   {
-    id: 'weekly',
-    title: 'Weekly review',
+    id: "weekly",
+    title: "Weekly review",
     start: new Date(2026, 6, 6, 14),
     end: new Date(2026, 6, 6, 15),
-    color: '#7b1fa2',
-    schedule: { recurrence: { frequency: 'weekly', byWeekday: [1], count: 12 } },
+    color: "#7b1fa2",
+    schedule: { recurrence: { frequency: "weekly", byWeekday: [1], count: 12 } },
   },
-])
+]);
 const schedule = ref<EventSchedule>({
-  recurrence: { frequency: 'weekly', interval: 1, byWeekday: [1], weekStart: 1 },
-})
+  recurrence: { frequency: "weekly", interval: 1, byWeekday: [1], weekStart: 1 },
+});
 
 function upsert(event: CalendarEvent) {
-  const index = events.value.findIndex((item) => item.id === event.id)
-  if (index < 0) events.value.push(event)
-  else events.value.splice(index, 1, event)
+  const index = events.value.findIndex((item) => item.id === event.id);
+  if (index < 0) events.value.push(event);
+  else events.value.splice(index, 1, event);
 }
 function remove(event: CalendarEvent) {
-  events.value = events.value.filter((item) => item.id !== event.id)
+  events.value = events.value.filter((item) => item.id !== event.id);
 }
 </script>
 
 <template>
   <VApp :theme="theme">
     <VMain>
-      <main>
+      <div class="site-content">
         <header class="hero">
           <nav class="site-nav" aria-label="Primary navigation">
             <a class="brand" href="#top" aria-label="mazey-dayspan-vuetify home">mazey-dayspan-vuetify</a>
@@ -150,8 +151,8 @@ function remove(event: CalendarEvent) {
 
           <div class="demo-frame">
             <DsCalendarApp
+              v-model:date="date"
               v-model:view="view"
-              :date="new Date(2026, 6, 10)"
               :events="events"
               @event-create="upsert"
               @event-update="upsert"
@@ -201,7 +202,7 @@ function remove(event: CalendarEvent) {
         <footer>
           <p><strong>mazey-dayspan-vuetify</strong> is an independent MIT-licensed Vue 3 successor inspired by DaySpan Vuetify.</p>
         </footer>
-      </main>
+      </div>
     </VMain>
   </VApp>
 </template>
