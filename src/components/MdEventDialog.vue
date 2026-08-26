@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { formatLocalDateTime, parseLocalDateTime } from 'mazey'
 import { reactive, watch } from 'vue'
 import { VBtn, VCard, VCardActions, VCardText, VCardTitle, VCheckbox, VDialog, VSpacer, VTextField, VTextarea } from 'vuetify/components'
 import { useMazeyDaySpan } from '../plugin/context'
 import { validateEvent } from '../core/recurrence'
-import { fromLocalInput, toLocalInput } from '../utils/dateInput'
 import type { CalendarEvent, EventValidationError } from '../types'
 const props = withDefaults(defineProps<{ modelValue:boolean; event?:CalendarEvent; initialDate?:Date }>(), { event:undefined, initialDate:undefined })
 const emit = defineEmits<{ 'update:modelValue':[open:boolean]; eventCreate:[event:CalendarEvent]; eventUpdate:[event:CalendarEvent]; eventRemove:[event:CalendarEvent] }>()
@@ -12,10 +12,14 @@ const ds = useMazeyDaySpan(); const draft = reactive({ id:'', title:'', start:''
 watch(() => [props.modelValue, props.event, props.initialDate] as const, () => {
   if (!props.modelValue) return
   const start = props.event?.start ?? props.initialDate ?? new Date(); const end = props.event?.end ?? new Date(start.getTime() + 3_600_000)
-  Object.assign(draft, { id:props.event?.id ?? globalThis.crypto.randomUUID(), title:props.event?.title ?? '', start:toLocalInput(start), end:toLocalInput(end), description:props.event?.description ?? '', location:props.event?.location ?? '', allDay:props.event?.allDay ?? false }); errors.splice(0)
+  Object.assign(draft, { id:props.event?.id ?? globalThis.crypto.randomUUID(), title:props.event?.title ?? '', start:formatLocalDateTime(start), end:formatLocalDateTime(end), description:props.event?.description ?? '', location:props.event?.location ?? '', allDay:props.event?.allDay ?? false }); errors.splice(0)
 }, { immediate:true })
 const close = () => emit('update:modelValue', false)
-function value():CalendarEvent { return { ...props.event, ...draft, start:fromLocalInput(draft.start), end:fromLocalInput(draft.end) } }
+function value():CalendarEvent {
+  const start = parseLocalDateTime(draft.start)
+  const end = parseLocalDateTime(draft.end)
+  return { ...props.event, ...draft, start:start ?? new Date(Number.NaN), end:end ?? new Date(Number.NaN) }
+}
 function save() { const event=value(); const result=validateEvent(event); errors.splice(0, errors.length, ...result.errors); if(!result.valid)return; if(props.event)emit('eventUpdate',event); else emit('eventCreate',event); close() }
 function remove() { if(props.event){ emit('eventRemove',props.event); close() } }
 </script>

@@ -62,26 +62,7 @@ function layoutOverlappingIntervals<T>(
 
 The generalized contract should document half-open intervals (`end <= nextStart` does not overlap), stable sorting, invalid-range handling, and whether `columnCount` represents the active group or the complete connected overlap cluster.
 
-## 3. `parseLocalDateTime` and `formatLocalDateTime`
-
-- **Purpose:** Strictly parse and format HTML `datetime-local` values using local calendar fields without applying a UTC conversion.
-- **Why it is reusable:** Forms in many browser projects need a reliable wall-clock round trip. The current `fromLocalInput` validates impossible dates and times rather than allowing `Date` normalization, while `toLocalInput` emits the exact fixed-width form value. Mazey's `isValidDate` validates but does not return this strict local-field parse, and `formatDate` does not define the HTML control's fixed-width contract.
-- **Proposed generalized API:**
-
-```ts
-type LocalDateTimePrecision = 'minute' | 'second' | 'millisecond'
-
-function parseLocalDateTime(value: string): Date | null
-
-function formatLocalDateTime(
-  date: Date,
-  options?: { precision?: LocalDateTimePrecision },
-): string
-```
-
-Returning `null` makes parse failure explicit; a project needing the current invalid-`Date` sentinel can adapt it locally.
-
-## 4. `addCalendarDays` and `startOfLocalWeek`
+## 3. `addCalendarDays` and `startOfLocalWeek`
 
 - **Purpose:** Perform non-mutating local-calendar day arithmetic and calculate a configurable local week boundary.
 - **Why it is reusable:** `src/core/date.ts` correctly changes calendar fields instead of adding `86_400_000` milliseconds, which avoids daylight-saving-time drift. The same primitives are used by view ranges, recurrence alignment, navigation, and day intersection logic and are broadly useful in date-based applications.
@@ -100,7 +81,7 @@ function startOfLocalWeek(
 
 Both functions should reject invalid dates and invalid/non-integer arguments, preserve the input object, and define `startOfLocalWeek` as local midnight.
 
-## 5. `validateMarkdownLocalLinks`
+## 4. `validateMarkdownLocalLinks`
 
 - **Purpose:** Find repository-local Markdown links, reject paths that escape the repository, verify targets, and validate heading fragments.
 - **Why it is reusable:** `scripts/validate-doc-links.mjs` implements a useful documentation CI check that is not specific to this package. README-and-guides layouts recur across npm projects, including the need to distinguish handwritten Markdown from generated documentation.
@@ -126,9 +107,14 @@ function validateMarkdownLocalLinks(options: {
 
 The reusable implementation should expose structured results rather than writing to the console or setting `process.exitCode`. CLI policy, generated-directory checks, and file discovery should remain separate adapters.
 
+## Existing Mazey APIs adopted
+
+- Recurrence integer fields and selector lists use Mazey 5.9.0's `isNumber` with `integer` and inclusive `min`/`max` constraints. The local adapter retains the calendar rule that omitted optional fields are valid.
+- `validateEvent` uses Mazey's `isValidDate` after requiring `Date` instances. Calendar-specific IDs, titles, chronology, typed error codes, and validation results remain in this package.
+
 ## Duplicated or overlapping code not recommended for Mazey
 
 - `requestCreateWithKeyboard` is duplicated in the month and week views, but it is a small component-specific emission handler. A local component helper could remove the duplication; a broad keyboard-shortcut API would add more abstraction than value.
 - Theme setup is repeated in the basic example and playground, but both already delegate storage semantics to Mazey's `resolveThemePreference` and `setThemePreference`. A Vue-only wrapper should stay in this project unless several Vue consumers establish the same lifecycle contract.
-- `validInteger`, `uniqueSorted`, `sameInstant`, and simple string trimming are small native-language compositions. Extracting them would create low-value APIs.
-- `validateEvent` combines generic date checks with package-specific ID, title, and error-code rules. Mazey's `isValidDate` can support callers, but the full validator should remain with the calendar domain.
+- `uniqueSorted`, `sameInstant`, and simple string trimming are small native-language compositions. Extracting them would create low-value APIs.
+- The complete `validateEvent` function remains calendar-domain logic even though its generic date-validity check now delegates to Mazey.

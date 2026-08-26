@@ -1,3 +1,4 @@
+import { isNumber, isValidDate } from 'mazey'
 import type { CalendarEvent, CalendarOccurrence, CalendarRange, EventValidationError, OccurrenceOverride, RecurrenceRule } from '../types'
 import { addDays, DAY_MS, startOfDay, startOfWeek } from './date'
 
@@ -60,14 +61,17 @@ function intersectsRange(item: CalendarOccurrence, range: CalendarRange) {
   return item.end > range.start && item.start < range.end
 }
 function validInteger(value: unknown, minimum: number, maximum = Number.MAX_SAFE_INTEGER) {
-  return value === undefined || (typeof value === 'number' && Number.isInteger(value) && value >= minimum && value <= maximum)
+  return value === undefined || isNumber(value, { integer:true, min:minimum, max:maximum })
+}
+function isCalendarDate(value: unknown): value is Date {
+  return value instanceof Date && isValidDate(value)
 }
 export function isValidRecurrenceRule(rule: unknown): rule is RecurrenceRule {
   if (!rule || typeof rule !== 'object') return false
   const value = rule as Partial<Record<keyof RecurrenceRule, unknown>>
   if (!['daily', 'weekly', 'monthly', 'yearly'].includes(value.frequency as string)) return false
   const validList = (list: unknown, minimum: number, maximum: number) => list === undefined
-    || (Array.isArray(list) && list.every((item) => typeof item === 'number' && Number.isInteger(item) && item >= minimum && item <= maximum))
+    || (Array.isArray(list) && list.every((item) => isNumber(item, { integer:true, min:minimum, max:maximum })))
   return validInteger(value.interval, 1)
     && validInteger(value.count, 1)
     && validInteger(value.weekStart, 0, 6)
@@ -219,11 +223,13 @@ function updateOverride(event: CalendarEvent, value: OccurrenceOverride): Calend
 }
 export function validateEvent(event: CalendarEvent) {
   const errors: EventValidationError[] = []
+  const startValid = isCalendarDate(event.start)
+  const endValid = isCalendarDate(event.end)
   if (!event.id.trim()) errors.push('idRequired')
   if (!event.title.trim()) errors.push('titleRequired')
-  if (!(event.start instanceof Date) || Number.isNaN(event.start.getTime())) errors.push('startInvalid')
-  if (!(event.end instanceof Date) || Number.isNaN(event.end.getTime())) errors.push('endInvalid')
-  if (event.end <= event.start) errors.push('endAfterStart')
+  if (!startValid) errors.push('startInvalid')
+  if (!endValid) errors.push('endInvalid')
+  if (startValid && endValid && event.end <= event.start) errors.push('endAfterStart')
   return { valid: errors.length === 0, errors }
 }
 export const eventsForDay = (events: CalendarOccurrence[], date: Date) => events.filter((event) => startOfDay(event.start) < addDays(startOfDay(date), 1) && event.end > startOfDay(date))

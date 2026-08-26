@@ -1,5 +1,20 @@
 import { expect, test } from '@playwright/test'
 
+test('links to the playground, GitHub repository, and npm package from the navbar', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile', 'Navbar links are hidden in the mobile layout')
+  await page.goto('/')
+  const navbar = page.getByRole('navigation', { name:'Primary navigation' }).locator('.site-nav__links')
+  const navbarLinks = navbar.getByRole('link')
+  const playgroundLink = navbar.getByRole('link', { name:'Playground', exact:true })
+  const githubLink = navbar.getByRole('link', { name:'GitHub', exact:true })
+  const npmLink = navbar.getByRole('link', { name:'npm', exact:true })
+
+  await expect(navbarLinks).toHaveCount(3)
+  await expect(playgroundLink).toHaveAttribute('href', '#playground')
+  await expect(githubLink).toHaveAttribute('href', 'https://github.com/chengchuu/mazey-dayspan-vuetify')
+  await expect(npmLink).toHaveAttribute('href', 'https://www.npmjs.com/package/mazey-dayspan-vuetify')
+})
+
 test('navigate, change views, create, edit and remove an event', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { name:/July 2026/i })).toBeVisible()
