@@ -25,9 +25,9 @@ already available through the core `moveOccurrence` function.
 | `toolbar` | `DsCalendar` | date, view, navigate, setView | Replace the calendar toolbar |
 | `event` | calendar views | event, day | Safe rich event rendering |
 | `date-title` | `DsWeeksView` | day | Customize a date label |
-| `empty` | calendar/agenda | day where applicable | Empty state |
+| `empty` | calendar/agenda | optional day (month only) | Empty state |
 | `agenda-event` | `DsAgenda`, calendar | event | Agenda row rendering |
-| `actions` | `DsEventDialog` | save, close, remove, valid | Dialog actions |
+| `actions` | `DsEventDialog` | save, close, remove, valid (current draft) | Dialog actions |
 | `before`, `after` | `DsSchedule` | schedule | Extend recurrence fields |
 
 Slots are trusted application templates. Event title, description, and location are otherwise always
