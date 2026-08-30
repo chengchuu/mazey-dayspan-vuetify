@@ -107,9 +107,14 @@ function validateMarkdownLocalLinks(options: {
 
 The reusable implementation should expose structured results rather than writing to the console or setting `process.exitCode`. CLI policy, generated-directory checks, and file discovery should remain separate adapters.
 
+## Existing Mazey APIs adopted
+
+- Recurrence integer fields and selector lists use Mazey 5.9.0's `isNumber` with `integer` and inclusive `min`/`max` constraints. The local adapter retains the calendar rule that omitted optional fields are valid.
+- `validateEvent` uses Mazey's `isValidDate` after requiring `Date` instances. Calendar-specific IDs, titles, chronology, typed error codes, and validation results remain in this package.
+
 ## Duplicated or overlapping code not recommended for Mazey
 
 - `requestCreateWithKeyboard` is duplicated in the month and week views, but it is a small component-specific emission handler. A local component helper could remove the duplication; a broad keyboard-shortcut API would add more abstraction than value.
 - Theme setup is repeated in the basic example and playground, but both already delegate storage semantics to Mazey's `resolveThemePreference` and `setThemePreference`. A Vue-only wrapper should stay in this project unless several Vue consumers establish the same lifecycle contract.
-- `validInteger`, `uniqueSorted`, `sameInstant`, and simple string trimming are small native-language compositions. Extracting them would create low-value APIs.
-- `validateEvent` combines generic date checks with package-specific ID, title, and error-code rules. Mazey's `isValidDate` can support callers, but the full validator should remain with the calendar domain.
+- `uniqueSorted`, `sameInstant`, and simple string trimming are small native-language compositions. Extracting them would create low-value APIs.
+- The complete `validateEvent` function remains calendar-domain logic even though its generic date-validity check now delegates to Mazey.

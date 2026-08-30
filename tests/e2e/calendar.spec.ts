@@ -1,52 +1,84 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test";
 
-test('navigate, change views, create, edit and remove an event', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.getByRole('heading', { name:/July 2026/i })).toBeVisible()
-  await page.getByRole('button', { name:'Next' }).click()
-  await page.getByRole('button', { name:'Week', exact:true }).click()
-  await page.getByRole('button', { name:/Fri/ }).first().focus()
-  await page.keyboard.press('Shift+Enter')
-  await expect(page.getByText('Create event')).toBeVisible()
-  await page.getByLabel('Title').fill('E2E event')
-  await page.getByRole('button', { name:'Save' }).click()
-  await page.getByRole('button', { name:/E2E event/ }).click()
-  await expect(page.getByText('Edit event')).toBeVisible()
-  await page.getByLabel('Title').fill('Updated event')
-  await page.getByRole('button', { name:'Save' }).click()
-  await page.getByRole('button', { name:/Updated event/ }).click()
-  await page.getByRole('button', { name:'Delete event' }).click()
-  await expect(page.getByRole('button', { name:/Updated event/ })).toHaveCount(0)
-})
+test("links to the playground, GitHub repository, and npm package from the navbar", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === "mobile", "Navbar links are hidden in the mobile layout");
+  await page.goto("/");
+  const navbar = page.getByRole("navigation", { name:"Primary navigation" }).locator(".site-nav__links");
+  const navbarLinks = navbar.getByRole("link");
+  const playgroundLink = navbar.getByRole("link", { name:"Playground", exact:true });
+  const githubLink = navbar.getByRole("link", { name:"GitHub", exact:true });
+  const npmLink = navbar.getByRole("link", { name:"npm", exact:true });
 
-test('shows generated recurring occurrences in agenda', async ({ page }) => {
-  await page.goto('/')
-  await page.getByRole('button', { name:'Agenda', exact:true }).click()
-  await expect(page.getByRole('button', { name:/Weekly review/ })).toHaveCount(4)
-})
+  await expect(navbarLinks).toHaveCount(3);
+  await expect(playgroundLink).toHaveAttribute("href", "#playground");
+  await expect(githubLink).toHaveAttribute("href", "https://github.com/chengchuu/mazey-dayspan-vuetify");
+  await expect(npmLink).toHaveAttribute("href", "https://www.npmjs.com/package/mazey-dayspan-vuetify");
+});
 
-test('toolbar remains keyboard operable on mobile', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile', 'This scenario only applies to the mobile project')
-  await page.goto('/')
-  await page.getByRole('button', { name:'Today' }).focus()
-  await page.keyboard.press('Tab')
-  await expect(page.getByRole('button', { name:'Next' })).toBeFocused()
-})
+test("navigate, change views, create, edit and remove an event", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("main")).toHaveCount(1);
+  await expect(page.getByRole("heading", { name:/July 2026/i })).toBeVisible();
+  await page.getByRole("button", { name:"Next" }).click();
+  await page.getByRole("button", { name:"Week", exact:true }).click();
+  await expect(page.getByRole("heading", { name:/August 2026/i })).toBeVisible();
+  await page.getByRole("button", { name:/Fri/ }).first().focus();
+  await page.keyboard.press("Shift+Enter");
+  await expect(page.getByText("Create event")).toBeVisible();
+  await page.getByLabel("Title").fill("E2E event");
+  await page.getByRole("button", { name:"Save" }).click();
+  await page.getByRole("button", { name:/E2E event/ }).click();
+  await expect(page.getByText("Edit event")).toBeVisible();
+  await page.getByLabel("Title").fill("Updated event");
+  await page.getByRole("button", { name:"Save" }).click();
+  await page.getByRole("button", { name:/Updated event/ }).click();
+  await page.getByRole("button", { name:"Delete event" }).click();
+  await expect(page.getByRole("button", { name:/Updated event/ })).toHaveCount(0);
+});
 
-test('keeps the theme control in the page header and preserves theme switching', async ({ page }) => {
+test("a light calendar subtree overrides dark ancestor tokens", async ({ page }) => {
+  await page.goto("/");
+  const surface = await page.evaluate(() => {
+    const dark = document.createElement("div");
+    dark.className = "md-theme-dark";
+    const light = document.createElement("div");
+    light.className = "md-theme-light";
+    dark.append(light);
+    document.body.append(dark);
+    return getComputedStyle(light).getPropertyValue("--md-surface").trim();
+  });
+
+  expect(surface).toBe("#fff");
+});
+
+test("shows generated recurring occurrences in agenda", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name:"Agenda", exact:true }).click();
+  await expect(page.getByRole("button", { name:/Weekly review/ })).toHaveCount(4);
+});
+
+test("toolbar remains keyboard operable on mobile", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "This scenario only applies to the mobile project");
+  await page.goto("/");
+  await page.getByRole("button", { name:"Today" }).focus();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name:"Next" })).toBeFocused();
+});
+
+test("keeps the theme control in the page header and preserves theme switching", async ({ page }) => {
   await page.addInitScript(() => {
-    localStorage.setItem('MAZEY_DAYSPAN_VUETIFY_THEME', 'dark')
-  })
-  await page.goto('/')
-  const themeControl = page.locator('header').getByRole('checkbox', { name:'Dark mode' })
+    localStorage.setItem("MAZEY_DAYSPAN_VUETIFY_THEME", "dark");
+  });
+  await page.goto("/");
+  const themeControl = page.locator("header").getByRole("checkbox", { name:"Dark mode" });
 
-  await expect(themeControl).toBeVisible()
-  await expect(themeControl).toBeChecked()
-  await expect(page.locator('.v-application')).toHaveClass(/v-theme--dark/)
-  await themeControl.focus()
-  await expect(themeControl).toBeFocused()
-  await page.keyboard.press('Space')
-  await expect(themeControl).not.toBeChecked()
-  await expect(page.locator('.v-application')).toHaveClass(/v-theme--light/)
-  await expect.poll(() => page.evaluate(() => localStorage.getItem('MAZEY_DAYSPAN_VUETIFY_THEME'))).toBe('light')
-})
+  await expect(themeControl).toBeVisible();
+  await expect(themeControl).toBeChecked();
+  await expect(page.locator(".v-application")).toHaveClass(/v-theme--dark/);
+  await themeControl.focus();
+  await expect(themeControl).toBeFocused();
+  await page.keyboard.press("Space");
+  await expect(themeControl).not.toBeChecked();
+  await expect(page.locator(".v-application")).toHaveClass(/v-theme--light/);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("MAZEY_DAYSPAN_VUETIFY_THEME"))).toBe("light");
+});

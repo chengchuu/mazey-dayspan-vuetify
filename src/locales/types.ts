@@ -9,4 +9,4 @@ export interface MazeyLocale {
     idRequired: string; titleRequired: string; startInvalid: string; endInvalid: string; endAfterStart: string; close: string
   }
 }
-export type MazeyLocaleOverride = { code?: string; firstDayOfWeek?: number; messages?: Partial<MazeyLocale['messages']> }
+export type MazeyLocaleOverride = { code?: string; firstDayOfWeek?: number; messages?: Partial<MazeyLocale["messages"]> };
