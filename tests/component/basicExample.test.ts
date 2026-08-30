@@ -7,7 +7,10 @@ const themeMocks = vi.hoisted(() => ({
   setThemePreference: vi.fn(() => true),
 }))
 
-vi.mock('mazey', () => themeMocks)
+vi.mock('mazey', async (importOriginal) => ({
+  ...await importOriginal<typeof import('mazey')>(),
+  ...themeMocks,
+}))
 
 const global = {
   stubs: {

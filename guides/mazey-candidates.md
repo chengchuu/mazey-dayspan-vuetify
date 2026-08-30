@@ -62,26 +62,7 @@ function layoutOverlappingIntervals<T>(
 
 The generalized contract should document half-open intervals (`end <= nextStart` does not overlap), stable sorting, invalid-range handling, and whether `columnCount` represents the active group or the complete connected overlap cluster.
 
-## 3. `parseLocalDateTime` and `formatLocalDateTime`
-
-- **Purpose:** Strictly parse and format HTML `datetime-local` values using local calendar fields without applying a UTC conversion.
-- **Why it is reusable:** Forms in many browser projects need a reliable wall-clock round trip. The current `fromLocalInput` validates impossible dates and times rather than allowing `Date` normalization, while `toLocalInput` emits the exact fixed-width form value. Mazey's `isValidDate` validates but does not return this strict local-field parse, and `formatDate` does not define the HTML control's fixed-width contract.
-- **Proposed generalized API:**
-
-```ts
-type LocalDateTimePrecision = 'minute' | 'second' | 'millisecond'
-
-function parseLocalDateTime(value: string): Date | null
-
-function formatLocalDateTime(
-  date: Date,
-  options?: { precision?: LocalDateTimePrecision },
-): string
-```
-
-Returning `null` makes parse failure explicit; a project needing the current invalid-`Date` sentinel can adapt it locally.
-
-## 4. `addCalendarDays` and `startOfLocalWeek`
+## 3. `addCalendarDays` and `startOfLocalWeek`
 
 - **Purpose:** Perform non-mutating local-calendar day arithmetic and calculate a configurable local week boundary.
 - **Why it is reusable:** `src/core/date.ts` correctly changes calendar fields instead of adding `86_400_000` milliseconds, which avoids daylight-saving-time drift. The same primitives are used by view ranges, recurrence alignment, navigation, and day intersection logic and are broadly useful in date-based applications.
@@ -100,7 +81,7 @@ function startOfLocalWeek(
 
 Both functions should reject invalid dates and invalid/non-integer arguments, preserve the input object, and define `startOfLocalWeek` as local midnight.
 
-## 5. `validateMarkdownLocalLinks`
+## 4. `validateMarkdownLocalLinks`
 
 - **Purpose:** Find repository-local Markdown links, reject paths that escape the repository, verify targets, and validate heading fragments.
 - **Why it is reusable:** `scripts/validate-doc-links.mjs` implements a useful documentation CI check that is not specific to this package. README-and-guides layouts recur across npm projects, including the need to distinguish handwritten Markdown from generated documentation.
