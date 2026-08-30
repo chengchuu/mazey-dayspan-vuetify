@@ -170,7 +170,7 @@ npm run typecheck
 npm test
 npm run build
 npm run test:e2e
-npm run docs:build
+npm run docs
 npm run docs:links
 ```
 
