@@ -66,9 +66,9 @@ function remove(event: CalendarEvent) {
             <a class="brand" href="#top" aria-label="mazey-dayspan-vuetify home">mazey-dayspan-vuetify</a>
             <div class="site-nav__actions">
               <div class="site-nav__links">
-                <a href="#features">Features</a>
                 <a href="#playground">Playground</a>
-                <a href="#install">Install</a>
+                <a href="https://github.com/chengchuu/mazey-dayspan-vuetify">GitHub</a>
+                <a href="https://www.npmjs.com/package/mazey-dayspan-vuetify">npm</a>
               </div>
               <VSwitch
                 v-model="dark"

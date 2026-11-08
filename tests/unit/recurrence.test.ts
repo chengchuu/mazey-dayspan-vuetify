@@ -49,6 +49,24 @@ describe('recurrence range and calendar boundaries', () => {
     expect(isValidRecurrenceRule({ frequency:'weekly', byWeekday:[undefined] })).toBe(false)
   })
 
+  it.each([
+    [{ frequency:'daily', interval:1, count:1 }, true],
+    [{ frequency:'daily', interval:0 }, false],
+    [{ frequency:'daily', interval:1.5 }, false],
+    [{ frequency:'daily', count:Number.POSITIVE_INFINITY }, false],
+    [{ frequency:'weekly', weekStart:0, byWeekday:[0, 6] }, true],
+    [{ frequency:'weekly', weekStart:6, byWeekday:[0, 6] }, true],
+    [{ frequency:'weekly', weekStart:7 }, false],
+    [{ frequency:'weekly', byWeekday:[-1] }, false],
+    [{ frequency:'monthly', byMonthDay:[1, 31] }, true],
+    [{ frequency:'monthly', byMonthDay:[0] }, false],
+    [{ frequency:'monthly', byMonthDay:[31.5] }, false],
+    [{ frequency:'yearly', byMonth:[1, 12] }, true],
+    [{ frequency:'yearly', byMonth:[13] }, false],
+  ])('validates recurrence integer constraints for %#', (rule, valid) => {
+    expect(isValidRecurrenceRule(rule)).toBe(valid)
+  })
+
   it('terminates selector generation when every requested date is impossible', () => {
     const impossible = { ...event, start:new Date(2026, 1, 1, 9), end:new Date(2026, 1, 1, 10), schedule:{ recurrence:{ frequency:'yearly' as const, byMonth:[2], byMonthDay:[30] } } }
     expect(expandEvent(impossible, { start:new Date(2026, 0, 1), end:new Date(2030, 0, 1) })).toEqual([])

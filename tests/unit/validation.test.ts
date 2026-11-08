@@ -15,6 +15,29 @@ describe('event validation messages', () => {
     expect(validateEvent(event).errors).toEqual(['idRequired', 'startInvalid', 'endInvalid'])
   })
 
+  it('requires Date instances even when Mazey accepts another date representation', () => {
+    const runtimeEvent = {
+      id: 'runtime-event',
+      title: 'Runtime event',
+      start: '2026-08-25 09:00:00',
+      end: new Date(2026, 7, 25, 10),
+    } as unknown as CalendarEvent
+
+    expect(validateEvent(runtimeEvent).errors).toEqual(['startInvalid'])
+  })
+
+  it('accepts valid Date instances and preserves chronological validation', () => {
+    const validEvent: CalendarEvent = {
+      id: 'valid-event',
+      title: 'Valid event',
+      start: new Date(2026, 7, 25, 9),
+      end: new Date(2026, 7, 25, 10),
+    }
+
+    expect(validateEvent(validEvent)).toEqual({ valid:true, errors:[] })
+    expect(validateEvent({ ...validEvent, end:validEvent.start }).errors).toEqual(['endAfterStart'])
+  })
+
   it('provides a distinct localized message for every validation code', () => {
     const dayspan = createMazeyDaySpanContext()
     const codes: EventValidationError[] = [
