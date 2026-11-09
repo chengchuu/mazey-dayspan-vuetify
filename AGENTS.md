@@ -16,10 +16,11 @@ Keep the package:
 - Free of Vue private APIs, prototype mutation, global framework patches, and implicit HTML
   rendering.
 
-Use npm for documented development and CI commands; the current workflows run on Node.js 22. The
-repository intentionally tracks `pnpm-lock.yaml`, ignores `package-lock.json`, and has no
-`packageManager` or `engines` field; preserve that state. When dependencies change, keep
-`package.json` and the tracked pnpm lockfile synchronized without adding a package lock.
+Use pnpm for local dependency installation and lockfile updates, then run repository scripts with
+npm. The current workflows run `npm install` and npm scripts on Node.js 22. The repository
+intentionally tracks `pnpm-lock.yaml`, ignores `package-lock.json`, and has no `packageManager` or
+`engines` field; preserve that state. When dependencies change, keep `package.json` and the tracked
+pnpm lockfile synchronized without adding a package lock.
 
 ## Repository layout
 
@@ -37,7 +38,10 @@ repository intentionally tracks `pnpm-lock.yaml`, ignores `package-lock.json`, a
 - `playground/`: Vite-powered public website and interactive example.
 - `tests/unit/`, `tests/component/`, and `tests/e2e/`: Vitest and Playwright coverage.
 - `guides/`: handwritten project documentation, including `PUBLIC_API.md`, migration, roadmap,
-  audit, and notice files.
+  audit, implementation-plan, and notice files.
+- `eslint.config.js`: ESLint 9 flat configuration for JavaScript, TypeScript, Vue, and ESLint
+  Stylistic rules. `tests/unit/eslintConfig.test.ts` covers long-import formatting and trailing
+  whitespace.
 - `scripts/validate-doc-links.mjs`: validates local links in `README.md` and `guides/` and rejects
   Markdown source under generated `docs/`.
 - `dist/` and `docs/`: generated package and GitHub Pages output. Never edit or commit them by hand.
@@ -65,10 +69,11 @@ Do not export internal `Md*` names. When adding a public component, export its `
 and document its props, emits, and slots in `guides/PUBLIC_API.md` and the README where relevant.
 
 Vue and Vuetify are peer dependencies. Mazey is a runtime dependency used for strict local
-date-time conversion and general date/number validation. Keep all three external in the Vite
-library build. Before adding a general-purpose helper covered by Mazey, verify the installed
-version's declarations, implementation, runtime compatibility, and edge cases. Use named imports
-only when behavior matches; do not add wrappers that merely rename Mazey functions.
+date-time conversion, general date/number validation, and stored theme preferences in the example
+and playground. Keep all three external in the Vite library build. Before adding a general-purpose
+helper covered by Mazey, verify the installed version's declarations, implementation, runtime
+compatibility, and edge cases. Use named imports only when behavior matches; do not add wrappers
+that merely rename Mazey functions.
 
 The package must continue to emit:
 
@@ -91,6 +96,11 @@ context.
 Use `<script setup lang="ts">`, the Composition API, typed props, tuple emits, and typed slots.
 Use `mazeyDaySpanKey`, `createMazeyDaySpanContext()`, and `useMazeyDaySpan()` for shared context. Do
 not rely on runtime SFC name inference for plugin registration.
+
+Plugin defaults are `eventColor`, `view`, `agendaDays`, and `hourHeight`. `DsCalendar` uses the
+configured default view only when its `view` prop is omitted. Agenda rendering, emitted ranges, and
+navigation use `agendaDays`; time-grid positioning and hour lines use `hourHeight`. Keep explicit
+component props authoritative over defaults.
 
 Treat exports from `src/index.ts`, `src/components/index.ts`, `src/composables/`, `src/core/`,
 `src/locales/`, `src/plugin/`, and `src/types/` as public API. When changing them, update tests,
@@ -115,6 +125,12 @@ Recurrence expansion must remain deterministic and bounded:
 - Inclusions, exclusions, cancellations, and moved overrides must not mutate the source event.
 - Moved occurrences retain their `originalStart` identity and are filtered by effective time.
 
+Apply `limit` after rule occurrences, inclusions, and moved overrides are merged and sorted so it
+bounds the final result. Event `end` values are exclusive. Week and day views render all-day events
+in a dedicated band above the timed track; a multi-day all-day event appears in each intersected
+day. Keep all-day events out of overlap layout and label them as all-day instead of announcing a
+midnight time.
+
 For recurrence changes, cover multiple weekdays, intervals greater than one, Monday and Sunday
 week starts, `count` and `until`, month-end and leap-day behavior, sparse selectors, distant ranges,
 and affected inclusion/exclusion/override interactions. Do not claim complete RFC 5545 or timezone
@@ -135,9 +151,15 @@ interactions must remain keyboard reachable with visible focus and accurate acce
 Maintain Shift+Enter and Shift+Space event-creation shortcuts, Vuetify dialog focus/Escape behavior,
 and `prefers-reduced-motion` support. Do not require a Material icon font.
 
+The calendar `empty` slot receives `day` in month view and no `day` in agenda view; keep the scope
+typed as optional through `DsCalendar` and `DsCalendarApp`. The dialog `actions` slot receives the
+validity of the current parsed draft even before validation messages are displayed.
+
 Keep library styling in `src/styles/main.scss`. Use `--md-*` variables, support light and dark host
-themes, and avoid global resets or selectors that alter unrelated host content. The documented
-consumer stylesheet remains:
+themes, and avoid global resets or selectors that alter unrelated host content. Define light tokens
+for `:root`, `.v-theme--light`, and `.md-theme-light` so an explicit light subtree can override a
+dark ancestor; preserve `.v-theme--dark` and `.md-theme-dark`. The documented consumer stylesheet
+remains:
 
 ```ts
 import 'mazey-dayspan-vuetify/style.css'
@@ -160,6 +182,12 @@ Vitest runs before `dist/` exists. Keep its exact aliases for the package root t
 captures the stylesheet subpath. Mobile-only Playwright tests must check
 `testInfo.project.name === 'mobile'`.
 
+`eslint.config.js` registers `@stylistic/eslint-plugin` and treats formatting violations as errors.
+Preserve double quotes, semicolons, two-space indentation, multiline trailing commas and imports,
+spaced object braces, compact array brackets, final newlines, spaced comments, and no trailing
+whitespace. Use `npm run lint:fix` for repository formatting; keep the focused ESLint configuration
+test when changing rule order or fixer behavior.
+
 Use the standard validation sequence for source changes:
 
 ```sh
@@ -173,7 +201,7 @@ For playground, interaction, or documentation changes, also run:
 
 ```sh
 npm run test:e2e
-npm run docs:build
+npm run docs
 npm run docs:links
 ```
 
@@ -185,13 +213,14 @@ and verify a clean Vite consumer can import the default plugin, `DsCalendar`, `D
 ## Playground, documentation, and deployment
 
 The public website source is under `playground/`. `npm run dev` and `npm run docs:dev` serve it;
-`npm run docs:build` runs the Markdown link validator and writes the generated Pages artifact to
+`npm run docs` runs the Markdown link validator and writes the generated Pages artifact to
 `docs/`. Preserve `base: './'` so assets work below `/mazey-dayspan-vuetify/`.
 
 Keep the page semantic, responsive, keyboard accessible, and crawlable with one descriptive `h1`.
-Preserve the locale control, stored dark-mode preference, recurrence editor, custom event rendering,
-favicon, and public sections. Keep the canonical URL, Open Graph and Twitter metadata, JSON-LD,
-`robots.txt`, and `sitemap.xml` aligned with
+Preserve the single main landmark, `Playground`/`GitHub`/`npm` navbar, locale control, header-level
+`Dark mode` switch, stored theme preference, controlled calendar date, recurrence editor, custom
+event rendering, favicon, and public sections. Keep the canonical URL, Open Graph and Twitter
+metadata, JSON-LD, `robots.txt`, and `sitemap.xml` aligned with
 `https://chengchuu.github.io/mazey-dayspan-vuetify/`. After a site change, inspect generated
 `docs/index.html` for relative assets and the expected metadata, and confirm the crawler files were
 copied. Do not edit generated `docs/` output.
